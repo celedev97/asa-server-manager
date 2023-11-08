@@ -17,9 +17,9 @@ class AsaServerConfigDto {
     var serverName = ""
     var serverPassword = ""
     var serverAdminPassword = ""
-    var serverPort: Int? = 7777
-    var serverQueryPort: Int? = 27015
-    var serverMaxPlayers: Int? = 70
+    var serverPort: Int = 7777
+    var serverQueryPort: Int = 27015
+    var serverMaxPlayers: Int = 70
     var battlEye = true
     var serverSpectatorPassword = ""
     var serverLocalIp = ""

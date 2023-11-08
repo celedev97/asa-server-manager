@@ -180,7 +180,7 @@ class ServerTab(val configDto: AsaServerConfigDto) : JPanel() {
             }
             JButton("Verify/Update Server").apply {
                 addActionListener {
-                    ProcessFrame.run(SwingUtilities.getWindowAncestor(this) as JFrame, springHelper.steamCMDService.downloadVerifyServerCommand("servers"+File.separator+configDto.guid));
+                    ProcessFrame.run(SwingUtilities.getWindowAncestor(this) as JFrame, springHelper.steamCMDService.downloadVerifyServerCommand(configDto.guid));
                 }
             }.also {
                 add(it, gbcrow3)
@@ -249,7 +249,7 @@ class ServerTab(val configDto: AsaServerConfigDto) : JPanel() {
 
             JButton("Start").apply {
                 addActionListener {
-                    springHelper.commandRunnerService.runCommand(*configDto.command)
+                    springHelper.commandRunnerService.runCommand(*configDto.getCommand)
                 }
             }.also {
                 add(it, gbcrow5)
