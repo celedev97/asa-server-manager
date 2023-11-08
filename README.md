@@ -1,8 +1,10 @@
 # ASA Server Manager
 
-ASA Server Manager is a program for installing and managing self-hosted servers for the Ark Survival Ascended game. This program is currently under development and is not yet complete.
+ASA Server Manager is a program for installing and managing self-hosted servers for the Ark Survival Ascended game.
 
 The program aim to be as similar as possible to the old ARK Server Manager for Ark Survival Evolved.
+
+### This program is currently under development and is not yet complete!
 
 ## Requirements
 
