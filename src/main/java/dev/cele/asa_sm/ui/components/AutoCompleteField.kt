@@ -1,12 +1,12 @@
 package dev.cele.asa_sm.ui.components
 
-import dev.cele.asa_sm.ui.addValueChangedListener
+import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener
 import javax.swing.JTextField
 
 class AutoCompleteField(strictSetting: Boolean, var options: List<String> = mutableListOf()): JTextField() {
 
     fun addValueChangedListener(function: (String) -> Unit) {
-        super.getDocument().addValueChangedListener {
+        super.getDocument().addDocumentListener(SimpleDocumentListener{
             if(strict){
                 if(options.contains(text)){
                     function(text)
@@ -14,7 +14,7 @@ class AutoCompleteField(strictSetting: Boolean, var options: List<String> = muta
             }else{
                 function(text)
             }
-        }
+        })
     }
 
     var strict: Boolean = false

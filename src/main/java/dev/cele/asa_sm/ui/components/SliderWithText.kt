@@ -1,4 +1,4 @@
-package dev.cele.asa_sm.components
+package dev.cele.asa_sm.ui.components
 
 import dev.cele.asa_sm.ui.components.NumberField
 import java.awt.BorderLayout
@@ -21,12 +21,12 @@ class SliderWithText(min: Int = 0, max: Int = 100, value: Int = 0) : JPanel() {
         }
         numberField.addValueChangedListener {
             if(slider.value != numberField.value){
-                slider.value = numberField.value
+                slider.value = numberField.value.toInt()
             }
         }
     }
 
-    fun addChangeListener(listener: (Int) -> Unit) {
+    fun addChangeListener(listener: (Number) -> Unit) {
         slider.addChangeListener { listener(slider.value) }
     }
 }

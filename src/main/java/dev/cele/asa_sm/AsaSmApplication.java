@@ -1,6 +1,6 @@
 package dev.cele.asa_sm;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.*;
 import dev.cele.asa_sm.ui.frames.MainFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 
 import java.awt.event.WindowAdapter;
@@ -16,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 @SpringBootApplication
+@EnableFeignClients
 @Slf4j
 public class AsaSmApplication implements CommandLineRunner {
 
@@ -26,7 +28,7 @@ public class AsaSmApplication implements CommandLineRunner {
     private MainFrame frame;
 
     public static void main(String[] args) {
-        FlatDarculaLaf.setup();
+        IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
         new SpringApplicationBuilder(AsaSmApplication.class)
                 .web(WebApplicationType.NONE)
                 .headless(false)

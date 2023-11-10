@@ -1,7 +1,8 @@
 package dev.cele.asa_sm.ui.frames
 
 import dev.cele.asa_sm.SimpleLogger
-import dev.cele.asa_sm.components.ServerHelperComponent
+import dev.cele.asa_sm.config.SpringApplicationContext
+import dev.cele.asa_sm.services.CommandRunnerService
 import java.awt.BorderLayout
 import java.awt.Color
 import javax.swing.*
@@ -11,8 +12,8 @@ import javax.swing.text.StyleContext
 import kotlin.concurrent.thread
 
 
-class ProcessFrame(parent: JFrame, vararg commandAndArgs: String) : JPanel(), SimpleLogger {
-    val springHelper = ServerHelperComponent.get();
+class ProcessFrame(parent: JFrame, vararg commandAndArgs: String) : JDialog(), SimpleLogger {
+    val commandRunnerService = SpringApplicationContext.autoWire(CommandRunnerService::class.java)
 
     val textPane = JTextPane ()
 
@@ -57,13 +58,17 @@ class ProcessFrame(parent: JFrame, vararg commandAndArgs: String) : JPanel(), Si
 
         //create a process to execute the command
         thread(start = true) {
-            var result = springHelper.commandRunnerService.runCommand(this, *commandAndArgs)
+            var result = commandRunnerService.runCommand(this, *commandAndArgs)
             closeButton.isEnabled = true
             statusLabel.text = if(result.exitCode == 0) "Success!" else "Failed!"
             val dialog = SwingUtilities.getRoot(this@ProcessFrame) as JDialog
             dialog.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE;
         }
 
+        setSize(400, 600)
+        isResizable = true
+        setLocationRelativeTo(null)
+        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE;
     }
 
     override fun info(message: String?) {
@@ -89,13 +94,8 @@ class ProcessFrame(parent: JFrame, vararg commandAndArgs: String) : JPanel(), Si
         fun run(frame: JFrame, downloadVerifyServerCommand: Array<String>) {
             println("Running command: ${downloadVerifyServerCommand.joinToString(" ")}");
 
-            JDialog(frame, "Downloading and verifying server", true).apply {
-                add(ProcessFrame(frame, *downloadVerifyServerCommand))
-                setSize(400, 600)
-                isResizable = true
-                setLocationRelativeTo(null)
+            ProcessFrame(frame, *downloadVerifyServerCommand).apply {
                 isVisible = true
-                defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE;
             }
         }
     }

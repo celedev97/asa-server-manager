@@ -3,7 +3,7 @@ package dev.cele.asa_sm.ui.frames
 import com.fasterxml.jackson.databind.ObjectMapper
 import dev.cele.asa_sm.Const.PROFILES_DIR
 import dev.cele.asa_sm.dto.AsaServerConfigDto
-import dev.cele.asa_sm.ui.components.ServerTab
+import dev.cele.asa_sm.ui.ServerTab
 import lombok.extern.slf4j.Slf4j
 import org.springframework.stereotype.Component
 import java.awt.BorderLayout
@@ -23,7 +23,13 @@ class MainFrame(
 
 
     init {
-        title = "ASA SM"
+        SwingUtilities.invokeLater {
+            componentInit()
+        }
+    }
+
+    fun componentInit(){
+        title = "ASA Server Manager"
         defaultCloseOperation = EXIT_ON_CLOSE
         size = Dimension(800, 600)
         setLocationRelativeTo(null)

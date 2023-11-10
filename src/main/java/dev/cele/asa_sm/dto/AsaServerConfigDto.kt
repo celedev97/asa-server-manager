@@ -8,9 +8,7 @@ import java.io.File
 import java.util.*
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 class AsaServerConfigDto {
-    var installFolder = ""
     var map = MapsEnum.THE_ISLAND.mapName
     var guid = UUID.randomUUID().toString()
     var profileName = "Server"
@@ -20,7 +18,7 @@ class AsaServerConfigDto {
     var serverPort: Int = 7777
     var serverQueryPort: Int = 27015
     var serverMaxPlayers: Int = 70
-    var battlEye = true
+    var battlEye = false
     var serverSpectatorPassword = ""
     var serverLocalIp = ""
     var rconEnabled = false

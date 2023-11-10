@@ -4,7 +4,7 @@ import java.awt.GridBagLayout
 import javax.swing.BorderFactory
 import javax.swing.JPanel
 
-class GroupedPanel(title: String): JPanel(GridBagLayout()) {
+open class GroupedPanel(title: String): JPanel(GridBagLayout()) {
 
     init {
         border = BorderFactory.createTitledBorder(title.ifEmpty {" "})
