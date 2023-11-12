@@ -1,4 +1,4 @@
-package dev.cele.asa_sm.ui.components;
+package dev.cele.asa_sm.ui.components.forms;
 
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 import lombok.Getter;

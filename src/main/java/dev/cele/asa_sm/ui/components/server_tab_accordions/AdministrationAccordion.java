@@ -1,15 +1,12 @@
-package dev.cele.asa_sm.ui.server_tab_accordions;
+package dev.cele.asa_sm.ui.components.server_tab_accordions;
 
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
 import dev.cele.asa_sm.ui.components.AccordionTopBar;
-import dev.cele.asa_sm.ui.components.AutoCompleteField;
-import dev.cele.asa_sm.ui.components.NumberField;
-import lombok.Getter;
+import dev.cele.asa_sm.ui.components.forms.AutoCompleteField;
+import dev.cele.asa_sm.ui.components.forms.NumberField;
 import lombok.NoArgsConstructor;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
 
 @NoArgsConstructor
 public class AdministrationAccordion {

@@ -1,18 +1,17 @@
-package dev.cele.asa_sm.ui;
+package dev.cele.asa_sm.ui.components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
 import dev.cele.asa_sm.services.CommandRunnerService;
 import dev.cele.asa_sm.services.SteamCMDService;
-import dev.cele.asa_sm.ui.server_tab_accordions.AdministrationAccordion;
-import dev.cele.asa_sm.ui.server_tab_accordions.TopPanel;
+import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
+import dev.cele.asa_sm.ui.components.server_tab_accordions.TopPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Consumer;

@@ -1,15 +1,13 @@
-package dev.cele.asa_sm.ui.server_tab_accordions;
+package dev.cele.asa_sm.ui.components.server_tab_accordions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
-import dev.cele.asa_sm.ui.ServerTab;
+import dev.cele.asa_sm.ui.components.ServerTab;
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
-import lombok.Getter;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 
 public class TopPanel {

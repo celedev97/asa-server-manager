@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="dev.cele.asa_sm.ui.server_tab_accordions.AdministrationAccordion">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion">
   <grid id="27dc6" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="20" y="20" width="929" height="414"/>
@@ -142,19 +142,19 @@
                   <text value="Query Port:"/>
                 </properties>
               </component>
-              <component id="912e5" class="dev.cele.asa_sm.ui.components.NumberField" binding="numberField1" default-binding="true">
+              <component id="912e5" class="dev.cele.asa_sm.ui.components.forms.NumberField" binding="numberField1" default-binding="true">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="e96b3" class="dev.cele.asa_sm.ui.components.NumberField">
+              <component id="e96b3" class="dev.cele.asa_sm.ui.components.forms.NumberField">
                 <constraints>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="a3ed4" class="dev.cele.asa_sm.ui.components.NumberField">
+              <component id="a3ed4" class="dev.cele.asa_sm.ui.components.forms.NumberField">
                 <constraints>
                   <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -194,13 +194,13 @@
                   <text value="RCON Server Log Buffer:"/>
                 </properties>
               </component>
-              <component id="e155a" class="dev.cele.asa_sm.ui.components.NumberField">
+              <component id="e155a" class="dev.cele.asa_sm.ui.components.forms.NumberField">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="b1a88" class="dev.cele.asa_sm.ui.components.NumberField">
+              <component id="b1a88" class="dev.cele.asa_sm.ui.components.forms.NumberField">
                 <constraints>
                   <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -224,7 +224,7 @@
                   <text value="Map Name or Mod Map Path:"/>
                 </properties>
               </component>
-              <component id="b8afe" class="dev.cele.asa_sm.ui.components.AutoCompleteField" binding="mapNameField">
+              <component id="b8afe" class="dev.cele.asa_sm.ui.components.forms.AutoCompleteField" binding="mapNameField">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>

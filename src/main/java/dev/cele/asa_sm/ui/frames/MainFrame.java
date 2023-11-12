@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
-import dev.cele.asa_sm.ui.ServerTab;
+import dev.cele.asa_sm.ui.components.ServerTab;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
