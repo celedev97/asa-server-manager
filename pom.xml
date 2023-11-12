@@ -23,14 +23,6 @@
 
     <repositories>
         <repository>
-            <id>jetbrains.releases</id>
-            <url>https://www.jetbrains.com/intellij-repository/releases</url>
-        </repository>
-        <repository>
-            <id>jetbrains.3rdparty</id>
-            <url>https://cache-redirector.jetbrains.com/intellij-dependencies</url>
-        </repository>
-        <repository>
             <id>central</id>
             <name>Central Repository</name>
             <url>https://repo.maven.apache.org/maven2</url>
@@ -38,6 +30,14 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>jetbrains.releases</id>
+            <url>https://www.jetbrains.com/intellij-repository/releases</url>
+        </repository>
+        <repository>
+            <id>jetbrains.3rdparty</id>
+            <url>https://cache-redirector.jetbrains.com/intellij-dependencies</url>
         </repository>
     </repositories>
 
