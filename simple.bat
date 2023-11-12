@@ -1,0 +1,3 @@
+cd /D "%~dp0"
+.\steamcmd\steamcmd.exe +force_install_dir servers\d26128a7-059c-46ef-8f17-9769e257cbb4 +login anonymous +app_update 2430930 validate +quit
+START servers\d26128a7-059c-46ef-8f17-9769e257cbb4\ShooterGame\Binaries\Win64\ArkAscendedServer.exe TheIsland_WP?listen?SessionName=CeleTest?Port=7777?QueryPort=27015?MaxPlayers=10 -NoBattlEye -mods=928621,929800,929543,928501,928597,927131,926956,916922,914844,912902,900062,908148,929420,928650,932770,929118,930025,930436,932225,935748,929912,928708

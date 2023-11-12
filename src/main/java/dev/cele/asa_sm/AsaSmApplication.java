@@ -17,15 +17,12 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients("dev.cele.asa_sm")
 @Slf4j
 public class AsaSmApplication implements CommandLineRunner {
 
     @Autowired
     private ApplicationContext appContext;
-
-    @Autowired
-    private MainFrame frame;
 
     public static void main(String[] args) {
         IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
@@ -43,6 +40,7 @@ public class AsaSmApplication implements CommandLineRunner {
         if(argsList.contains("--cli")) {
             SpringApplication.exit(appContext, () -> 0);
         } else{
+            var frame = new MainFrame();
             frame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e)

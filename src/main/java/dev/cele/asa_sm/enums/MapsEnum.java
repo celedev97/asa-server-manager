@@ -8,5 +8,6 @@ public enum MapsEnum {
     THE_ISLAND("TheIsland_WP"),
     ;
 
-    public final String mapName;
+    @Getter
+    private final String mapName;
 }

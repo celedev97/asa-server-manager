@@ -6,6 +6,7 @@ import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
 import dev.cele.asa_sm.ui.ServerTab;
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +20,10 @@ public class TopPanel {
     private JButton saveButton;
     private JButton openInstallLocationButton;
     private JLabel installedVersionLabel;
+
     public JButton startButton;
     private JButton rconButton;
+
     public JPanel contentPane;
 
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
@@ -31,23 +34,25 @@ public class TopPanel {
     public TopPanel(AsaServerConfigDto configDto) {
         this.configDto = configDto;
 
-        guidLabel.setText(configDto.getGuid());
+        SwingUtilities.invokeLater(() -> {
+            guidLabel.setText(configDto.getGuid());
 
-        profileNameField.setText(configDto.getProfileName());
-        profileNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
-            configDto.setProfileName(text);
-        }));
+            profileNameField.setText(configDto.getProfileName());
+            profileNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+                configDto.setProfileName(text);
+            }));
 
-        saveButton.addActionListener(e -> {
-            try {
-                objectMapper.writeValue(Const.PROFILES_DIR.resolve(configDto.getGuid() + ".json").toFile(), configDto);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(contentPane, "Failed to save profile: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+            saveButton.addActionListener(e -> {
+                try {
+                    objectMapper.writeValue(Const.PROFILES_DIR.resolve(configDto.getGuid() + ".json").toFile(), configDto);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(contentPane, "Failed to save profile: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
 
-        startButton.addActionListener(e -> {
-            ((ServerTab) SwingUtilities.getAncestorOfClass(ServerTab.class, contentPane)).startServer();
+            startButton.addActionListener(e -> {
+                ((ServerTab) SwingUtilities.getAncestorOfClass(ServerTab.class, contentPane)).startServer();
+            });
         });
 
     }

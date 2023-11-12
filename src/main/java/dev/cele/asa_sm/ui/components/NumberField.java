@@ -1,10 +1,7 @@
 package dev.cele.asa_sm.ui.components;
 
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.ArrayList;
