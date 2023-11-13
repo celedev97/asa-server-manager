@@ -8,6 +8,8 @@ import dev.cele.asa_sm.ui.components.ServerTab;
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class TopPanel {
@@ -23,6 +25,7 @@ public class TopPanel {
     private JButton rconButton;
 
     public JPanel contentPane;
+    public JButton installVerifyButton;
 
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
 
@@ -32,27 +35,35 @@ public class TopPanel {
     public TopPanel(AsaServerConfigDto configDto) {
         this.configDto = configDto;
 
-        SwingUtilities.invokeLater(() -> {
-            guidLabel.setText(configDto.getGuid());
+        SwingUtilities.invokeLater(this::initAfter);
+    }
 
-            profileNameField.setText(configDto.getProfileName());
-            profileNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
-                configDto.setProfileName(text);
-            }));
+    public void initAfter(){
+        var serverTab = ((ServerTab) SwingUtilities.getAncestorOfClass(ServerTab.class, contentPane));
 
-            saveButton.addActionListener(e -> {
-                try {
-                    objectMapper.writeValue(Const.PROFILES_DIR.resolve(configDto.getGuid() + ".json").toFile(), configDto);
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(contentPane, "Failed to save profile: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            });
+        guidLabel.setText(configDto.getGuid());
 
-            startButton.addActionListener(e -> {
-                ((ServerTab) SwingUtilities.getAncestorOfClass(ServerTab.class, contentPane)).startServer();
-            });
+        profileNameField.setText(configDto.getProfileName());
+        profileNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+            configDto.setProfileName(text);
+        }));
+
+        saveButton.addActionListener(e -> {
+            try {
+                objectMapper.writeValue(Const.PROFILES_DIR.resolve(configDto.getGuid() + ".json").toFile(), configDto);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(contentPane, "Failed to save profile: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
+        startButton.addActionListener(e -> {
+            serverTab.startServer();
+        });
+
+        installVerifyButton.addActionListener(e -> {
+            System.out.println("installVerifyButton");
+            serverTab.install();
+        });
     }
 
 }

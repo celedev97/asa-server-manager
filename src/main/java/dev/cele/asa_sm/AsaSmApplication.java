@@ -41,6 +41,7 @@ public class AsaSmApplication implements CommandLineRunner {
             SpringApplication.exit(appContext, () -> 0);
         } else{
             var frame = new MainFrame();
+            frame.setVisible(true);
             frame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e)

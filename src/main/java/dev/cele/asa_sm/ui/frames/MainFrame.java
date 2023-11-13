@@ -24,9 +24,9 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setTitle("ASA Server Manager");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(new Dimension(800, 600));
+        setSize(new Dimension(825, 600));
+        setMinimumSize(new Dimension(825, 600));
         setLocationRelativeTo(null);
-        setVisible(true);
         setLayout(new BorderLayout());
 
         try {

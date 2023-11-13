@@ -1,5 +1,6 @@
 package dev.cele.asa_sm.services;
 
+import dev.cele.asa_sm.Const;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -116,30 +117,30 @@ public class SteamCMDService {
     //region SteamCMD Commands
 
     @SneakyThrows
-    public void runDownloadVerifyServer(String installDirName){
-        var result = commandRunnerService.runCommand(downloadVerifyServerCommand(installDirName));
+    public void runDownloadVerifyServer(String guid){
+        var result = commandRunnerService.runCommand(downloadVerifyServerCommand(guid));
 
         if(result.getExitCode() != 0) {
             logger.error("Error downloading server: "+result.getExitCode());
             throw new RuntimeException("Error downloading server: "+result.getExitCode());
         }
 
-        logger.info("Server downloaded to "+installDirName);
+        logger.info("Server downloaded to "+guid);
     }
 
     @SneakyThrows
-    public String[] downloadVerifyServerCommand(String installDirName){
-        var installDir = Path.of("servers" + File.separator + installDirName).toAbsolutePath().toString();
-        Files.createDirectories(Path.of(installDir));
+    public String[] downloadVerifyServerCommand(String guid){
+        var installDir = Const.SERVERS_DIR.resolve(guid);
+        Files.createDirectories(installDir);
         var steamCMD = "steamcmd";
         if(SystemUtils.IS_OS_WINDOWS) {
             steamCMD = STEAM_CMD_WIN_PATH;
         }
 
-        // steamcmd +force_install_dir ..\server\ +login anonymous +app_update 2430930 validate +quit
+        // steamcmd +force_install_dir ..\server\guid +login anonymous +app_update 2430930 validate +quit
         return new String[]{
                 steamCMD,
-                "+force_install_dir", installDir,
+                "+force_install_dir", installDir.toAbsolutePath().toString(),
                 "+login", "anonymous",
                 "+app_update", ASA_STEAM_GAME_NUMBER, "validate",
                 "+quit"
