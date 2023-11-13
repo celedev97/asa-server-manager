@@ -114,33 +114,22 @@
             <version>${intellij.version}</version>
         </dependency>
 
+        <!-- Aspectj AOP -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.9</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <configuration>
-                            <target>
-                                <path id="j2sp">
-                                    <pathelement location="${project.basedir}/src/main/java"/>
-                                </path>
-                                <taskdef name="javac2" classpathref="maven.runtime.classpath" classname="com.intellij.ant.Javac2"/>
-                                <javac2 destdir="${project.basedir}/target/classes">
-                                    <src refid="j2sp"/>
-                                </javac2>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -155,34 +144,34 @@
                 </configuration>
             </plugin>
 
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>default-compile</id>-->
-<!--                        <phase>none</phase>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>default-testCompile</id>-->
-<!--                        <phase>none</phase>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>compile</id>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>compile</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>testCompile</id>-->
-<!--                        <phase>test-compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>testCompile</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>

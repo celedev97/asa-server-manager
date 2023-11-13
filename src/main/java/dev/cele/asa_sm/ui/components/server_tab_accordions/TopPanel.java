@@ -40,7 +40,7 @@ public class TopPanel {
         SwingUtilities.invokeLater(this::initAfter);
     }
 
-    public void initAfter(){
+    public void initAfter() {
         var serverTab = ((ServerTab) SwingUtilities.getAncestorOfClass(ServerTab.class, contentPane));
 
         guidLabel.setText(configDto.getGuid());
@@ -48,7 +48,7 @@ public class TopPanel {
         profileNameField.setText(configDto.getProfileName());
         profileNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
             configDto.setProfileName(text);
-            serverTab.setUnsaved(true);
+            configDto.setUnsaved(true);
         }));
 
         saveButton.addActionListener(e -> {

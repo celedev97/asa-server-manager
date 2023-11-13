@@ -4,12 +4,8 @@ import dev.cele.asa_sm.dto.curseforge.DataDto;
 import dev.cele.asa_sm.dto.curseforge.GetModFilesRequestBody;
 import dev.cele.asa_sm.dto.curseforge.ModDto;
 import feign.RequestInterceptor;
-import feign.RequestTemplate;
-import feign.auth.BasicAuthRequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.encoding.BaseRequestInterceptor;
-import org.springframework.cloud.openfeign.encoding.FeignClientEncodingProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,10 +33,15 @@ public interface CurseForgeService {
 
 class CurseForgeFeignClientConfiguration {
     @Value("${curseforge.api.token}")
-    private String token;
+    private String originalToken;
 
     @Bean
     public RequestInterceptor requestInterceptor() {
+        var token = originalToken.chars()
+                .map(c -> ((c >= 'a' && c <= 'm') || (c >= 'A' && c <= 'M')) ? c + 13 : (((c >= 'n' && c <= 'z') || (c >= 'N' && c <= 'Z')) ? c - 13 : c))
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
         return requestTemplate -> {
             requestTemplate.header("x-api-key", token);
         };

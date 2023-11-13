@@ -21,50 +21,28 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public class ServerTab extends JPanel {
+
+    //region Autowired stuff from spring
     private final SteamCMDService steamCMDService = SpringApplicationContext.autoWire(SteamCMDService.class);
     private final CommandRunnerService commandRunnerService = SpringApplicationContext.autoWire(CommandRunnerService.class);
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
-
     private Logger log = LoggerFactory.getLogger(ServerTab.class);
+    //endregion
 
-
+    //region UI components
     private final TopPanel topPanel;
+    private final AdministrationAccordion administrationAccordion;
+    //endregion
+
+
     private Thread serverThread = null;
-
-    private AsaServerConfigDto configDto;
-
     @Getter
-    private boolean _unsaved = false;
-    public void setUnsaved(boolean value){
-        _unsaved = value;
-
-        //get tabbed pane and set title with a star if unsaved
-        JTabbedPane tabbedPane = (JTabbedPane) SwingUtilities.getAncestorOfClass(JTabbedPane.class, this);
-        if(tabbedPane != null){
-            int index = tabbedPane.indexOfComponent(this);
-            if(index != -1){
-                tabbedPane.setTitleAt(index, configDto.getProfileName() + (value ? " *" : ""));
-            }
-        }
-
-        //set the save button outline to red if unsaved
-        if(value){
-            topPanel.saveButton.putClientProperty("JComponent.outline", "error");
-        } else {
-            topPanel.saveButton.putClientProperty("JComponent.outline", null);
-        }
-    }
-    public boolean isUnsaved(){
-        return _unsaved;
-    }
-
-    public boolean isServerRunning(){
-        return serverThread != null && serverThread.isAlive();
-    }
+    private AsaServerConfigDto configDto;
 
     public ServerTab(AsaServerConfigDto configDto) {
         this.configDto = configDto;
 
+        //region setup UI components
         //region initial setup, var scrollPaneContent = JPanel()
         setLayout(new BorderLayout());
 
@@ -88,7 +66,7 @@ public class ServerTab extends JPanel {
         scrollPaneContent.add(topPanel.contentPane, globalVerticalGBC);
 
         //create a group named "Administration"
-        var administrationAccordion = new AdministrationAccordion(configDto);
+        administrationAccordion = new AdministrationAccordion(configDto);
         scrollPaneContent.add(administrationAccordion.contentPane, globalVerticalGBC);
 
         //... other accordion groups ...
@@ -97,9 +75,32 @@ public class ServerTab extends JPanel {
         JPanel fillerPanel = new JPanel();
         fillerPanel.setPreferredSize(new Dimension(0, 0));
         scrollPaneContent.add(fillerPanel, gbcClone(globalVerticalGBC, gbc -> gbc.weighty = 1.0));
+        //endregion
+
 
         detectInstalled();
+
+
+        configDto.addUnsavedChangeListener((unsaved) -> {
+            //get tabbed pane and set title with a star if unsaved
+            JTabbedPane tabbedPane = (JTabbedPane) SwingUtilities.getAncestorOfClass(JTabbedPane.class, this);
+            if(tabbedPane != null){
+                int index = tabbedPane.indexOfComponent(this);
+                if(index != -1){
+                    tabbedPane.setTitleAt(index, configDto.getProfileName() + (unsaved ? " *" : ""));
+                }
+            }
+
+            //set the save button outline to red if unsaved
+            if(unsaved){
+                topPanel.saveButton.putClientProperty("JComponent.outline", "error");
+            } else {
+                topPanel.saveButton.putClientProperty("JComponent.outline", null);
+            }
+        });
+
     }
+
 
     private boolean detectInstalled(){
         //check if the server is installed
@@ -126,12 +127,17 @@ public class ServerTab extends JPanel {
                 steamCMDService.downloadVerifyServerCommand(configDto.getGuid()),
                 result -> {
                     if(!wasInstalled){
-                        setUnsaved(true);
+                        configDto.setUnsaved(true);
                     }
                     detectInstalled();
                 }
         );
         processFrame.setVisible(true);
+    }
+
+
+    public boolean isServerRunning(){
+        return serverThread != null && serverThread.isAlive();
     }
 
     public void save() {
@@ -174,4 +180,5 @@ public class ServerTab extends JPanel {
         }
         return clone;
     }
+
 }

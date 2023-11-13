@@ -3,14 +3,38 @@ package dev.cele.asa_sm.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.cele.asa_sm.enums.MapsEnum;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-@Data
+@Getter
+@Setter
 public class AsaServerConfigDto {
+
+    //region stuff for the unsaved variable
+    @JsonIgnore
+    private boolean unsaved = false;
+    public void setUnsaved(boolean value){
+        unsaved = value;
+        unsavedChangeListeners.forEach(listener -> listener.accept(value));
+    }
+
+    @JsonIgnore
+    private List<Consumer<Boolean>> unsavedChangeListeners = new ArrayList<>();
+    @JsonIgnore
+    public void addUnsavedChangeListener(Consumer<Boolean> listener){
+        unsavedChangeListeners.add(listener);
+    }
+    @JsonIgnore
+    public void removeUnsavedChangeListener(Consumer<Boolean> listener){
+        unsavedChangeListeners.remove(listener);
+    }
+    //endregion
 
     private String map = MapsEnum.THE_ISLAND.getMapName();
     private String guid = UUID.randomUUID().toString();
