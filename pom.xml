@@ -180,7 +180,7 @@
         <profile>
             <id>prod</id>
             <properties>
-                <spring.profiles.active>secrets</spring.profiles.active>
+                <spring.profiles.active>prod</spring.profiles.active>
             </properties>
         </profile>
     </profiles>
