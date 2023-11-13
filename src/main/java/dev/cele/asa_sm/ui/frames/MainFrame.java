@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.IntConsumer;
 
 @Slf4j
 public class MainFrame extends JFrame {
@@ -63,14 +64,46 @@ public class MainFrame extends JFrame {
 
         add(tabbedPane, BorderLayout.CENTER);
 
-        tabbedPane.addTab("+", null);
-        tabbedPane.addChangeListener(e -> {
-            if (tabbedPane.getSelectedIndex() == tabbedPane.getTabCount() - 1) {
-                SwingUtilities.invokeLater(() -> {
-                    tabbedPane.setSelectedIndex(0);
-                    addProfile();
-                    tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 2);
-                });
+        //create the trailing toolbar with the plus button
+        var plusButton = new JButton("+");
+        plusButton.putClientProperty( "FlatLaf.styleClass", "large" );
+        plusButton.addActionListener(e -> {
+            addProfile();
+            tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+        });
+
+        var trailing = new JToolBar();
+        trailing.setFloatable(false);
+        trailing.setBorder(null);
+        trailing.add(Box.createHorizontalGlue());
+        trailing.add(plusButton);
+
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.putClientProperty("JTabbedPane.trailingComponent", trailing);
+        tabbedPane.putClientProperty("JTabbedPane.tabClosable", true);
+        tabbedPane.putClientProperty( "JTabbedPane.tabCloseCallback",(IntConsumer) tabIndex -> {
+            // get the tab component
+            var tabComponent = (ServerTab) tabbedPane.getComponentAt(tabIndex);
+
+
+            if(tabComponent.isServerRunning()){
+                JOptionPane.showMessageDialog(this, "Server is running, please stop it first", "Server is running", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if(tabComponent.isUnsaved()){
+                int result = JOptionPane.showConfirmDialog(this, "You have unsaved changes, do you want to save them?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION);
+                if(result == JOptionPane.YES_OPTION){
+                    tabComponent.save();
+                }else if(result == JOptionPane.CANCEL_OPTION){
+                    return;
+                }
+            }
+
+            tabbedPane.removeTabAt(tabIndex);
+
+
+            if(tabbedPane.getTabCount() == 0){
+                addProfile();
             }
         });
 
@@ -87,7 +120,7 @@ public class MainFrame extends JFrame {
             profile.setServerName("Default");
         }
 
-        int index = (tabbedPane.getTabCount() > 0) ? (tabbedPane.getTabCount() - 1) : 0;
-        tabbedPane.insertTab(profile.getServerName(), null, new ServerTab(profile), null, index);
+        int index = Math.max(tabbedPane.getTabCount(), 0);
+        tabbedPane.insertTab(profile.getProfileName(), null, new ServerTab(profile), null, index);
     }
 }

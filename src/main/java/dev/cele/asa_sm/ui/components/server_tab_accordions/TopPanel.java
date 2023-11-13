@@ -8,6 +8,7 @@ import dev.cele.asa_sm.ui.components.ServerTab;
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -17,8 +18,8 @@ public class TopPanel {
     private JButton findButton;
     private JButton importExportButton;
     private JTextField profileNameField;
-    private JButton saveButton;
-    private JButton openInstallLocationButton;
+    public JButton saveButton;
+    public JButton openInstallLocationButton;
     private JLabel installedVersionLabel;
 
     public JButton startButton;
@@ -26,6 +27,7 @@ public class TopPanel {
 
     public JPanel contentPane;
     public JButton installVerifyButton;
+    public JLabel installedLocationLabel;
 
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
 
@@ -46,6 +48,7 @@ public class TopPanel {
         profileNameField.setText(configDto.getProfileName());
         profileNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
             configDto.setProfileName(text);
+            serverTab.setUnsaved(true);
         }));
 
         saveButton.addActionListener(e -> {
@@ -61,9 +64,17 @@ public class TopPanel {
         });
 
         installVerifyButton.addActionListener(e -> {
-            System.out.println("installVerifyButton");
             serverTab.install();
         });
+
+        openInstallLocationButton.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(Const.SERVERS_DIR.resolve(configDto.getGuid()).toFile());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
     }
 
 }

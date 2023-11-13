@@ -19,22 +19,34 @@ public class ProcessFrame extends JDialog implements SimpleLogger {
 
     private final CommandRunnerService commandRunnerService = SpringApplicationContext.autoWire(CommandRunnerService.class);
     private final JTextPane textPane = new JTextPane();
-    private final JLabel statusLabel = new JLabel("Running...");
+    private final JLabel statusLabel = new JLabel("Idle");
     private final JButton closeButton = new JButton("Close");
 
-    private final JScrollPane scrollPane = new JScrollPane(textPane);
+    private final JScrollPane scrollPane;
 
-    public ProcessFrame(JFrame parent, String[] commandAndArgs) {
-        this(parent, commandAndArgs, null);
+    private String[] commandAndArgs;
+    private Consumer<ProcessOutputDto> callback;
+
+    public ProcessFrame(JFrame parent, String title, String[] commandAndArgs) {
+        this(parent, title, commandAndArgs, null);
     }
 
-    public ProcessFrame(JFrame parent, String[] commandAndArgs, Consumer<ProcessOutputDto> callback) {
-        super(parent);
+    public ProcessFrame(JFrame parent, String title,  String[] commandAndArgs, Consumer<ProcessOutputDto> callback) {
+        super(parent, title, true);
+
+        this.commandAndArgs = commandAndArgs;
+        this.callback = callback;
+
         setLayout(new BorderLayout());
 
         textPane.setEditable(false);
         DefaultCaret caret = (DefaultCaret)textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+
+        JPanel noWrapPanel = new JPanel( new BorderLayout() );
+        noWrapPanel.add(textPane);
+        scrollPane = new JScrollPane(noWrapPanel);
 
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -51,25 +63,34 @@ public class ProcessFrame extends JDialog implements SimpleLogger {
         statusPanel.add(closeButton, BorderLayout.SOUTH);
         add(statusPanel, BorderLayout.SOUTH);
 
-        new Thread(() -> {
-            var result = runCommand(commandAndArgs);
-            closeButton.setEnabled(true);
-            statusLabel.setText("Success!"); // or "Failed!" depending on the result
-            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-            if(callback != null) {
-                callback.accept(result);
-            }
-        }).start();
-
         setSize(400, 600);
         setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
-    private ProcessOutputDto runCommand(String... commandAndArgs) {
-        return commandRunnerService.runCommand(this, commandAndArgs);
+    boolean firstTimeVisible = true;
+    @Override
+    public void setVisible(boolean value){
+        if(firstTimeVisible && value){
+            firstTimeVisible = false;
+            runCommand();
+        }
+        super.setVisible(value);
+    }
+
+    private void runCommand() {
+        statusLabel.setText("Running...");
+        new Thread(() -> {
+            var result = commandRunnerService.runCommand(this, commandAndArgs);
+            closeButton.setEnabled(true);
+            statusLabel.setText("Finished, code="+result.getExitCode()); // or "Failed!" depending on the result
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            if(callback != null) {
+                callback.accept(result);
+            }
+        }).start();
     }
 
     @SneakyThrows
@@ -92,8 +113,4 @@ public class ProcessFrame extends JDialog implements SimpleLogger {
         textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(), message + "\n", aset);
     }
 
-    public static void run(JFrame frame, String[] downloadVerifyServerCommand) {
-        System.out.println("Running command: " + String.join(" ", downloadVerifyServerCommand));
-        SwingUtilities.invokeLater(() -> new ProcessFrame(frame, downloadVerifyServerCommand).setVisible(true));
-    }
 }

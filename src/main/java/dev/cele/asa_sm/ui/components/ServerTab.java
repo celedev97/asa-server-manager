@@ -9,6 +9,7 @@ import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.TopPanel;
 import dev.cele.asa_sm.ui.frames.ProcessFrame;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,35 @@ public class ServerTab extends JPanel {
     private Thread serverThread = null;
 
     private AsaServerConfigDto configDto;
+
+    @Getter
+    private boolean _unsaved = false;
+    public void setUnsaved(boolean value){
+        _unsaved = value;
+
+        //get tabbed pane and set title with a star if unsaved
+        JTabbedPane tabbedPane = (JTabbedPane) SwingUtilities.getAncestorOfClass(JTabbedPane.class, this);
+        if(tabbedPane != null){
+            int index = tabbedPane.indexOfComponent(this);
+            if(index != -1){
+                tabbedPane.setTitleAt(index, configDto.getProfileName() + (value ? " *" : ""));
+            }
+        }
+
+        //set the save button outline to red if unsaved
+        if(value){
+            topPanel.saveButton.putClientProperty("JComponent.outline", "error");
+        } else {
+            topPanel.saveButton.putClientProperty("JComponent.outline", null);
+        }
+    }
+    public boolean isUnsaved(){
+        return _unsaved;
+    }
+
+    public boolean isServerRunning(){
+        return serverThread != null && serverThread.isAlive();
+    }
 
     public ServerTab(AsaServerConfigDto configDto) {
         this.configDto = configDto;
@@ -71,29 +101,40 @@ public class ServerTab extends JPanel {
         detectInstalled();
     }
 
-    private void detectInstalled(){
+    private boolean detectInstalled(){
         //check if the server is installed
         if (Files.exists(Const.SERVERS_DIR.resolve(configDto.getGuid()))) {
             topPanel.installVerifyButton.setText("Verify/Update");
+            topPanel.openInstallLocationButton.setEnabled(true);
+            topPanel.installedLocationLabel.setText(Const.SERVERS_DIR.resolve(configDto.getGuid()).toString());
             topPanel.startButton.setEnabled(true);
+            return true;
         } else {
             topPanel.installVerifyButton.setText("Install");
+            topPanel.openInstallLocationButton.setEnabled(false);
+            topPanel.installedLocationLabel.setText("Not installed yet");
             topPanel.startButton.setEnabled(false);
+            return false;
         }
     }
 
     public void install(){
+        var wasInstalled = detectInstalled();
         ProcessFrame processFrame = new ProcessFrame(
                 (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this),
+                wasInstalled ? "Verifying/Updating server..." : "Installing server...",
                 steamCMDService.downloadVerifyServerCommand(configDto.getGuid()),
                 result -> {
+                    if(!wasInstalled){
+                        setUnsaved(true);
+                    }
                     detectInstalled();
                 }
         );
         processFrame.setVisible(true);
     }
 
-    private void saveJson() {
+    public void save() {
         //save the configDto to a json file
         Path configFile = Path.of("data" + File.separator + "profiles" + File.separator + configDto.getGuid() + ".json");
         try {
@@ -106,7 +147,7 @@ public class ServerTab extends JPanel {
 
     public void startServer() {
         //check if the server is running
-        if (serverThread != null && serverThread.isAlive()) {
+        if (isServerRunning()) {
             serverThread.interrupt();
             topPanel.startButton.setText("Start");
             return;
@@ -115,7 +156,9 @@ public class ServerTab extends JPanel {
         //start the server
         serverThread = new Thread(() -> {
             commandRunnerService.runCommand(configDto.getCommand());
-            SwingUtilities.invokeLater(() -> topPanel.startButton.setText("Start"));
+            SwingUtilities.invokeLater(() ->
+                    topPanel.startButton.setText("Start")
+            );
         });
         serverThread.start();
         topPanel.startButton.setText("Stop");
