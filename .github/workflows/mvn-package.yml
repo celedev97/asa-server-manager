@@ -28,10 +28,10 @@ jobs:
         APPLICATION_SECRET_PROPERTIES : ${{secrets.APPLICATION_SECRET_PROPERTIES}}
         
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B clean package -Pprod
       
     - name: Upload JAR Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
+        name: asa_sm_snapshot
         path: target/*.jar
