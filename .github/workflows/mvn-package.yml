@@ -21,5 +21,17 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
+    - name: Configure application-secrets.properties
+      run: |
+        python -c "import os; file = open('src/main/resources/application-secrets.properties', 'w'); file.write(os.environ['APPLICATION_SECRET_PROPERTIES']); file.close()"
+      env:
+        APPLICATION_SECRET_PROPERTIES : ${{secrets.APPLICATION_SECRET_PROPERTIES}}
+        
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      
+    - name: Upload JAR Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: target/*.jar
