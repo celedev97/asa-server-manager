@@ -94,3 +94,5 @@ fabric.properties
 # *.iml
 # modules.xml
 /src/main/resources/application-secrets.properties
+
+simple.bat
