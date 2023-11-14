@@ -7,6 +7,7 @@ import dev.cele.asa_sm.dto.AsaServerConfigDto;
 import dev.cele.asa_sm.services.CommandRunnerService;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
+import dev.cele.asa_sm.ui.components.server_tab_accordions.RulesAccordion;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.TopPanel;
 import dev.cele.asa_sm.ui.frames.ProcessDialog;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class ServerTab extends JPanel {
     private final SteamCMDService steamCMDService = SpringApplicationContext.autoWire(SteamCMDService.class);
     private final CommandRunnerService commandRunnerService = SpringApplicationContext.autoWire(CommandRunnerService.class);
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
+    private final RulesAccordion rulesAccordion;
     private Logger log = LoggerFactory.getLogger(ServerTab.class);
     //endregion
 
@@ -70,6 +72,8 @@ public class ServerTab extends JPanel {
         scrollPaneContent.add(administrationAccordion.contentPane, globalVerticalGBC);
 
         //... other accordion groups ...
+        rulesAccordion = new RulesAccordion(configDto);
+        scrollPaneContent.add(rulesAccordion.contentPane, globalVerticalGBC);
 
         //create an empty filler panel that will fill the remaining space if there's any
         JPanel fillerPanel = new JPanel();
