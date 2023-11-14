@@ -25,8 +25,8 @@ jobs:
     - name: Correct pom version as per tag name
       uses: jacobtomlinson/gha-find-replace@v3
       with:
-        find: "(<artifactId>asa_sm<\/artifactId>(?:\s)*<version>)\d+\.\d+\.\d+(?:-SNAPSHOT)?(<\/version>)"
-        replace: ${{ format('$1{0}$2', github.ref_name) }}
+        find: "(<artifactId>asa_sm<\/artifactId>(?:\\s)*<version>)\\d+\\.\\d+\\.\\d+(?:-SNAPSHOT)?(<\/version>)"
+        replace: "${{ format('$1{0}$2', github.ref_name) }}"
         include: "pom.xml"
 
     - name: Configure application-prod.properties
