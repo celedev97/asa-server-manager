@@ -34,5 +34,5 @@ jobs:
     - uses: ncipollo/release-action@v1.13.0
       with:
         artifacts: "target/*.jar"
-        bodyFile: "body.md"
+        draft: true
         generateReleaseNotes: true
