@@ -54,11 +54,7 @@ public class TopPanel {
         }));
 
         saveButton.addActionListener(e -> {
-            try {
-                objectMapper.writeValue(Const.PROFILES_DIR.resolve(configDto.getGuid() + ".json").toFile(), configDto);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(contentPane, "Failed to save profile: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            serverTab.save();
         });
 
         startButton.addActionListener(e -> {

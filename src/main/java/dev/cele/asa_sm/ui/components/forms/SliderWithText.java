@@ -5,8 +5,8 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 public class SliderWithText extends JPanel {
-    private JSlider slider;
-    private NumberField numberField;
+    private final JSlider slider;
+    private final NumberField numberField;
 
     public SliderWithText(){
         this(0, 100, 0);
@@ -21,12 +21,12 @@ public class SliderWithText extends JPanel {
         add(numberField, BorderLayout.EAST);
 
         slider.addChangeListener(e -> {
-            if (numberField.getValue().doubleValue() != (double)slider.getValue()) {
+            if (numberField.getNumber().doubleValue() != (double)slider.getValue()) {
                 numberField.setValue(slider.getValue());
             }
         });
 
-        numberField.addValueChangedListener(val -> {
+        numberField.addNumberListener(val -> {
             if (slider.getValue() != val.intValue()) {
                 slider.setValue(val.intValue());
             }
@@ -35,6 +35,6 @@ public class SliderWithText extends JPanel {
     }
 
     public void addChangeListener(Consumer<Number> listener) {
-        numberField.addValueChangedListener(listener);
+        numberField.addNumberListener(listener);
     }
 }

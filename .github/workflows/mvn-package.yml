@@ -21,7 +21,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
-    - name: Configure application-secrets.properties
+    - name: Configure application-prod.properties
       run: |
         python -c "import os; file = open('src/main/resources/application-prod.properties', 'w'); file.write(os.environ['APPLICATION_PROD_PROPERTIES']); file.close()"
       env:

@@ -38,13 +38,18 @@ public class AsaServerConfigDto {
 
     private String map = MapsEnum.THE_ISLAND.getMapName();
     private String guid = UUID.randomUUID().toString();
+
     private String profileName = "Server";
     private String serverName = "";
+
     private String serverPassword = "";
     private String serverAdminPassword = "";
+    private String serverSpecatorPassword = "";
+
     private int serverPort = 7777;
     private int serverQueryPort = 27015;
     private int serverMaxPlayers = 70;
+
     private boolean battlEye = false;
     private String serverSpectatorPassword = "";
     private String serverLocalIp = "";

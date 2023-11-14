@@ -6,16 +6,19 @@ import dev.cele.asa_sm.dto.curseforge.ModDto;
 import dev.cele.asa_sm.services.ModCacheService;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.Vector;
 
-public class ModsFrame extends JDialog {
+public class ModsDialog extends JDialog {
 
     private boolean loading = true;
     private final ModCacheService modCacheService = SpringApplicationContext.autoWire(ModCacheService.class);
     private final Vector<ModDto> mods = new Vector<>();
+    private final JTable table = new JTable();
 
-    public ModsFrame(JFrame mainFrame, AsaServerConfigDto configDto) {
+    public ModsDialog(JFrame mainFrame, AsaServerConfigDto configDto) {
         super(mainFrame, "Mods", true);
         setSize(500, 500);
         setLocationRelativeTo(mainFrame);
@@ -39,6 +42,5 @@ public class ModsFrame extends JDialog {
         setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setVisible(true);
     }
 }

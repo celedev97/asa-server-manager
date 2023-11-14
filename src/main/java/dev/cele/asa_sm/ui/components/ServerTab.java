@@ -8,7 +8,7 @@ import dev.cele.asa_sm.services.CommandRunnerService;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.TopPanel;
-import dev.cele.asa_sm.ui.frames.ProcessFrame;
+import dev.cele.asa_sm.ui.frames.ProcessDialog;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,7 +121,7 @@ public class ServerTab extends JPanel {
 
     public void install(){
         var wasInstalled = detectInstalled();
-        ProcessFrame processFrame = new ProcessFrame(
+        ProcessDialog processDialog = new ProcessDialog(
                 (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this),
                 wasInstalled ? "Verifying/Updating server..." : "Installing server...",
                 steamCMDService.downloadVerifyServerCommand(configDto.getGuid()),
@@ -132,7 +132,7 @@ public class ServerTab extends JPanel {
                     detectInstalled();
                 }
         );
-        processFrame.setVisible(true);
+        processDialog.setVisible(true);
     }
 
 
@@ -144,7 +144,7 @@ public class ServerTab extends JPanel {
         //save the configDto to a json file
         Path configFile = Path.of("data" + File.separator + "profiles" + File.separator + configDto.getGuid() + ".json");
         try {
-            objectMapper.writeValue(configFile.toFile(), configDto);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(configFile.toFile(), configDto);
             log.info("Saved configDto to " + configFile.toString() + " file");
         } catch (Exception e) {
             log.error("Error saving configDto to file", e);

@@ -76,7 +76,7 @@
                   <text value="Spectator Password:"/>
                 </properties>
               </component>
-              <component id="60d0d" class="javax.swing.JPasswordField" binding="passwordField1" default-binding="true">
+              <component id="60d0d" class="javax.swing.JPasswordField" binding="spectatorPasswordField">
                 <constraints>
                   <grid row="1" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -84,7 +84,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="5d2d9" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+              <component id="5d2d9" class="javax.swing.JTextField" binding="serverNameField">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -142,19 +142,19 @@
                   <text value="Query Port:"/>
                 </properties>
               </component>
-              <component id="912e5" class="dev.cele.asa_sm.ui.components.forms.NumberField" binding="numberField1" default-binding="true">
+              <component id="912e5" class="dev.cele.asa_sm.ui.components.forms.NumberField" binding="serverPortField">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="e96b3" class="dev.cele.asa_sm.ui.components.forms.NumberField">
+              <component id="e96b3" class="dev.cele.asa_sm.ui.components.forms.NumberField" binding="peerPortField">
                 <constraints>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="a3ed4" class="dev.cele.asa_sm.ui.components.forms.NumberField">
+              <component id="a3ed4" class="dev.cele.asa_sm.ui.components.forms.NumberField" binding="queryPortField">
                 <constraints>
                   <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -170,7 +170,7 @@
             <properties/>
             <border type="none" title="RCON"/>
             <children>
-              <component id="623f8" class="javax.swing.JCheckBox" binding="RCONEnabledCheckBox" default-binding="true">
+              <component id="623f8" class="javax.swing.JCheckBox" binding="rconEnabledCheckBox" default-binding="true">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -194,13 +194,13 @@
                   <text value="RCON Server Log Buffer:"/>
                 </properties>
               </component>
-              <component id="e155a" class="dev.cele.asa_sm.ui.components.forms.NumberField">
+              <component id="e155a" class="dev.cele.asa_sm.ui.components.forms.NumberField" binding="rconPortField">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="b1a88" class="dev.cele.asa_sm.ui.components.forms.NumberField">
+              <component id="b1a88" class="dev.cele.asa_sm.ui.components.forms.NumberField" binding="rconServerLogBufferField">
                 <constraints>
                   <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -238,7 +238,7 @@
                   <text value="Mod IDs:"/>
                 </properties>
               </component>
-              <component id="91849" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+              <component id="91849" class="javax.swing.JTextField" binding="modIDsField">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -246,7 +246,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="700c0" class="javax.swing.JButton" binding="button1" default-binding="true">
+              <component id="700c0" class="javax.swing.JButton" binding="modSearchButton">
                 <constraints>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>

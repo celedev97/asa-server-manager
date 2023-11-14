@@ -6,6 +6,8 @@ import dev.cele.asa_sm.dto.AsaServerConfigDto;
 import dev.cele.asa_sm.ui.components.AccordionTopBar;
 import dev.cele.asa_sm.ui.components.forms.AutoCompleteField;
 import dev.cele.asa_sm.ui.components.forms.NumberField;
+import dev.cele.asa_sm.ui.frames.ModsDialog;
+import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 import lombok.NoArgsConstructor;
 
 import javax.swing.*;
@@ -19,19 +21,100 @@ public class AdministrationAccordion {
     public JPanel contentPane;
     private JPasswordField serverPasswordField;
     private JPasswordField adminPasswordField;
-    private JPasswordField passwordField1;
-    private JTextField textField1;
+    private JPasswordField spectatorPasswordField;
+    private JTextField serverNameField;
     private JLabel serverNameLengthLabel;
-    private NumberField numberField1;
-    private JCheckBox RCONEnabledCheckBox;
+    private NumberField serverPortField;
+    private JCheckBox rconEnabledCheckBox;
     private AutoCompleteField mapNameField;
-    private JTextField textField2;
-    private JButton button1;
+    private JTextField modIDsField;
+    private JButton modSearchButton;
+    private NumberField peerPortField;
+    private NumberField queryPortField;
+    private NumberField rconPortField;
+    private NumberField rconServerLogBufferField;
+
+    private AsaServerConfigDto configDto;
 
     public AdministrationAccordion(AsaServerConfigDto configDto) {
+        this.configDto = configDto;
+        SwingUtilities.invokeLater(this::initAfter);
     }
 
-    void init() {
+    void initAfter() {
+        //setting initial values
+        serverNameField.setText(configDto.getServerName());
+        serverNameLengthLabel.setText(String.valueOf(configDto.getServerName().length()));
+
+        serverPasswordField.setText(configDto.getServerPassword());
+        adminPasswordField.setText(configDto.getServerAdminPassword());
+        spectatorPasswordField.setText(configDto.getServerSpectatorPassword());
+
+        serverPortField.setValue(configDto.getServerPort());
+        peerPortField.setValue(configDto.getServerPort() + 1);
+        queryPortField.setValue(configDto.getServerQueryPort());
+
+        rconEnabledCheckBox.setSelected(configDto.isRconEnabled());
+        rconPortField.setValue(configDto.getRconPort());
+        rconServerLogBufferField.setValue(configDto.getRconServerLogBuffer());
+
+        mapNameField.setText(configDto.getMap());
+        modIDsField.setText(String.join(",", configDto.getModIds()));
+
+        //region listeners
+        serverNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+            serverNameLengthLabel.setText(String.valueOf(text.length()));
+            configDto.setServerName(text);
+        }));
+
+        serverPasswordField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+            configDto.setServerPassword(text);
+        }));
+        adminPasswordField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+            configDto.setServerAdminPassword(text);
+        }));
+        spectatorPasswordField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+            configDto.setServerSpectatorPassword(text);
+        }));
+
+        serverPortField.addNumberListener(val -> {
+            configDto.setServerPort(val.intValue());
+            peerPortField.setValue(val.intValue() + 1);
+        });
+        queryPortField.addNumberListener(val -> {
+            configDto.setServerQueryPort(val.intValue());
+        });
+
+        rconEnabledCheckBox.addActionListener(e -> {
+            configDto.setRconEnabled(rconEnabledCheckBox.isSelected());
+        });
+        rconPortField.addNumberListener(val -> {
+            configDto.setRconPort(val.intValue());
+        });
+        rconServerLogBufferField.addNumberListener(val -> {
+            configDto.setRconServerLogBuffer(val.intValue());
+        });
+
+        mapNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+            configDto.setMap(text);
+        }));
+        modIDsField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
+            //check if the text is all numbers and commas, if not replace all non numbers and commas with nothing
+            if (!text.matches("[0-9,]*")) {
+                var correctedText = text.replaceAll("[^0-9,]", "");
+                SwingUtilities.invokeLater(() -> modIDsField.setText(correctedText));
+                return;
+            }
+            configDto.setModIds(text);
+        }));
+
+        modSearchButton.addActionListener(e -> {
+            //get jframe ancestor
+            JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this.contentPane);
+            //open mod search dialog
+            ModsDialog modsDialog = new ModsDialog(frame, configDto);
+            modsDialog.setVisible(true);
+        });
 
     }
 
@@ -80,10 +163,10 @@ public class AdministrationAccordion {
         final JLabel label4 = new JLabel();
         label4.setText("Spectator Password:");
         panel2.add(label4, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        passwordField1 = new JPasswordField();
-        panel2.add(passwordField1, new GridConstraints(1, 5, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        textField1 = new JTextField();
-        panel2.add(textField1, new GridConstraints(0, 1, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        spectatorPasswordField = new JPasswordField();
+        panel2.add(spectatorPasswordField, new GridConstraints(1, 5, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        serverNameField = new JTextField();
+        panel2.add(serverNameField, new GridConstraints(0, 1, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label5 = new JLabel();
         label5.setText("Length:");
         panel2.add(label5, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -103,29 +186,29 @@ public class AdministrationAccordion {
         final JLabel label8 = new JLabel();
         label8.setText("Query Port:");
         panel3.add(label8, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        numberField1 = new NumberField();
-        panel3.add(numberField1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final NumberField numberField2 = new NumberField();
-        panel3.add(numberField2, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final NumberField numberField3 = new NumberField();
-        panel3.add(numberField3, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        serverPortField = new NumberField();
+        panel3.add(serverPortField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        peerPortField = new NumberField();
+        panel3.add(peerPortField, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        queryPortField = new NumberField();
+        panel3.add(queryPortField, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel4.setBorder(BorderFactory.createTitledBorder(null, "RCON", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        RCONEnabledCheckBox = new JCheckBox();
-        RCONEnabledCheckBox.setText("RCON Enabled");
-        panel4.add(RCONEnabledCheckBox, new GridConstraints(0, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        rconEnabledCheckBox = new JCheckBox();
+        rconEnabledCheckBox.setText("RCON Enabled");
+        panel4.add(rconEnabledCheckBox, new GridConstraints(0, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label9 = new JLabel();
         label9.setText("RCON Port:");
         panel4.add(label9, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label10 = new JLabel();
         label10.setText("RCON Server Log Buffer:");
         panel4.add(label10, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final NumberField numberField4 = new NumberField();
-        panel4.add(numberField4, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final NumberField numberField5 = new NumberField();
-        panel4.add(numberField5, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        rconPortField = new NumberField();
+        panel4.add(rconPortField, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        rconServerLogBufferField = new NumberField();
+        panel4.add(rconServerLogBufferField, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel5, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -138,11 +221,11 @@ public class AdministrationAccordion {
         final JLabel label12 = new JLabel();
         label12.setText("Mod IDs:");
         panel5.add(label12, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        textField2 = new JTextField();
-        panel5.add(textField2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        button1 = new JButton();
-        button1.setText("\uD83D\uDD0D");
-        panel5.add(button1, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        modIDsField = new JTextField();
+        panel5.add(modIDsField, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        modSearchButton = new JButton();
+        modSearchButton.setText("\uD83D\uDD0D");
+        panel5.add(modSearchButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -151,4 +234,5 @@ public class AdministrationAccordion {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

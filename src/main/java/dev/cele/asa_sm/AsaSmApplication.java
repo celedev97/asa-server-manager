@@ -12,6 +12,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
@@ -25,7 +26,6 @@ public class AsaSmApplication implements CommandLineRunner {
     private ApplicationContext appContext;
 
     public static void main(String[] args) {
-        IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
         new SpringApplicationBuilder(AsaSmApplication.class)
                 .web(WebApplicationType.NONE)
                 .headless(false)
@@ -40,6 +40,9 @@ public class AsaSmApplication implements CommandLineRunner {
         if(argsList.contains("--cli")) {
             SpringApplication.exit(appContext, () -> 0);
         } else{
+            FlatLaf.registerCustomDefaultsSource( "dev.cele.asa_sm.themes" );
+            IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
+
             var frame = new MainFrame();
             frame.setVisible(true);
             frame.addWindowListener(new WindowAdapter() {

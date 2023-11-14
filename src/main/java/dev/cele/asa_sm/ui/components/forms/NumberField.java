@@ -2,20 +2,20 @@ package dev.cele.asa_sm.ui.components.forms;
 
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NumberField extends JTextField {
+public class NumberField extends JSpinner {
 
-    @Getter
-    private Number value = 0;
+    private final ArrayList<Consumer<Number>> numberListeners = new ArrayList<>();
 
-    public void setValue(Number value) {
-        this.value = value;
-        setText(value.toString());
+    public Number getNumber() {
+        return (Number) getValue();
     }
 
     public NumberField() {
@@ -24,24 +24,21 @@ public class NumberField extends JTextField {
 
     public NumberField(Number value) {
         super();
-
-        getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
-            try {
-                this.value = Double.parseDouble(text);
-                valueChangedListeners.forEach(listener -> listener.accept(this.value ));
-            } catch (NumberFormatException e) {
-                setValue(this.value);
-            }
-        }));
+        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(this, "#");
+        setEditor(editor);
 
         setValue(value);
+
+        addChangeListener(e -> {
+            numberListeners.forEach(l -> l.accept((Number) getValue()));
+        });
     }
 
-    private final List<Consumer<Number>> valueChangedListeners = new ArrayList<>();
-    public void addValueChangedListener(Consumer<Number> function) {
-        valueChangedListeners.add(function);
+    public void addNumberListener(Consumer<Number> listener){
+        numberListeners.add(listener);
     }
-    public void removeValueChangedListener(Consumer<Number> function) {
-        valueChangedListeners.remove(function);
+    public void removeNumberListener(Consumer<Number> listener){
+        numberListeners.remove(listener);
     }
+
 }
