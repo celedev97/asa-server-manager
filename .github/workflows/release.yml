@@ -1,4 +1,4 @@
-name: Create Release
+name: Release installer
 
 on:
   push:
@@ -40,5 +40,5 @@ jobs:
     - uses: ncipollo/release-action@v1.13.0
       with:
         artifacts: "innosetup/Output/*.exe"
-        draft: true
+        prerelease: true
         generateReleaseNotes: true

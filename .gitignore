@@ -32,13 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### ASA_SM ###
-servers/
-steamcmd/
-data/
-
-
-
 ### INTELLIJ ###
 # Created by https://www.gitignore.io/api/intellij
 
@@ -93,9 +86,16 @@ fabric.properties
 
 # *.iml
 # modules.xml
+
+
+# Production properties injected by Github actions
 /src/main/resources/application-prod.properties
 
-# innosetup files
+# innosetup output files
 /innosetup/Output/
 
-simple.bat
+### ASA_SM execution files ###
+/test_dir
+/servers
+/steamcmd
+/data

@@ -3,6 +3,7 @@ package dev.cele.asa_sm.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.dto.curseforge.ModDto;
+import dev.cele.asa_sm.feign.CurseForgeClient;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ModCacheService {
 
-    private final CurseForgeService curseForgeService;
+    private final CurseForgeClient curseForgeClient;
     private final ObjectMapper objectMapper;
 
     @PostConstruct
@@ -49,7 +50,7 @@ public class ModCacheService {
                 .collect(Collectors.toList());
 
         if (!missingModIds.isEmpty()) {
-            curseForgeService.getModsByIds(missingModIds).getData().forEach(mod -> {
+            curseForgeClient.getModsByIds(missingModIds).getData().forEach(mod -> {
                 try {
                     objectMapper.writeValue(Const.MOD_CACHE_DIR.resolve(mod.getId() + ".json").toFile(), mod);
                 } catch (IOException e) {

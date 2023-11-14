@@ -1,4 +1,4 @@
-package dev.cele.asa_sm.services;
+package dev.cele.asa_sm.feign;
 
 import dev.cele.asa_sm.dto.curseforge.DataDto;
 import dev.cele.asa_sm.dto.curseforge.GetModFilesRequestBody;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @FeignClient(name = "curseforge", url = "https://api.curseforge.com/v1", configuration = CurseForgeFeignClientConfiguration.class)
-public interface CurseForgeService {
+public interface CurseForgeClient {
 
     @GetMapping("/mods/{modId}")
     DataDto<ModDto> getModById(@PathVariable Integer modId);

@@ -1,6 +1,7 @@
 package dev.cele.asa_sm;
 
 import com.formdev.flatlaf.*;
+import dev.cele.asa_sm.services.UpdateService;
 import dev.cele.asa_sm.ui.frames.MainFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class AsaSmApplication implements CommandLineRunner {
     @Autowired
     private ApplicationContext appContext;
 
+    @Autowired
+    private UpdateService updateService;
+
     public static void main(String[] args) {
         new SpringApplicationBuilder(AsaSmApplication.class)
                 .web(WebApplicationType.NONE)
@@ -42,6 +46,9 @@ public class AsaSmApplication implements CommandLineRunner {
         } else{
             FlatLaf.registerCustomDefaultsSource( "dev.cele.asa_sm.themes" );
             IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
+
+            updateService.checkForUpdates();
+
 
             var frame = new MainFrame();
             frame.setVisible(true);
