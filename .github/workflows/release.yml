@@ -39,6 +39,6 @@ jobs:
 
     - uses: ncipollo/release-action@v1.13.0
       with:
-        artifacts: "target/*.exe"
+        artifacts: "innosetup/Output/*.exe"
         draft: true
         generateReleaseNotes: true
