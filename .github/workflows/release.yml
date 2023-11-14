@@ -31,11 +31,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Pprod
 
-    # TODO: create an installer or a zip or something
+    - name: Building the installer
+      run: |
+        "%programfiles(x86)%\Inno Setup 6\iscc.exe" "FreenetInstall_InnoSetup.iss"
+      shell: cmd
 
-    # TODO: use the zip or something, don't use the jar
     - uses: ncipollo/release-action@v1.13.0
       with:
-        artifacts: "target/*.jar"
+        artifacts: "target/*.exe"
         draft: true
         generateReleaseNotes: true

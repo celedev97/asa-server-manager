@@ -129,6 +129,7 @@
     </dependencies>
 
     <build>
+        <finalName>asa_sm</finalName>
         <plugins>
 
             <plugin>

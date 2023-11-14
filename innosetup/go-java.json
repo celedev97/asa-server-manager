@@ -1,0 +1,4 @@
+{
+    "javaVersion": 17,
+    "launch": "./asa_sm.jar"
+}
