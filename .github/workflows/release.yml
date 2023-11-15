@@ -19,20 +19,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: asa_sm_jar
-
-    #print the content of the current folder
-    - name: test dir
-      run: |
-        dir
-      shell: cmd
-
-    #unzip the artifact???
-    - name: Extract tgz
-      uses: ihiroky/extract-action@v1
-      with:
-        file_path: asa_sm_jar.zip
-        extract_dir: target
-
+        path: target
 
     - name: Building the installer
       run: |
