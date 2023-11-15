@@ -18,7 +18,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={#MyAppName}
+DefaultDirName={userappdata}\{#MyAppName}
 DisableProgramGroupPage=yes
 InfoBeforeFile=.\info.txt
 ; Remove the following line to run in administrative install mode (install for all users.)

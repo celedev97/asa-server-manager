@@ -23,6 +23,19 @@ jobs:
           name: asa_sm_jar
           path: target
 
+      - name: Modify innosetup version number
+        uses: mingjun97/file-regex-replace
+        with:
+          regex: '#define MyAppVersion "[^"]+"'
+          replacement: '#define MyAppVersion "${{ inputs.version }}"'
+          include: '*.iss'
+          path: 'innosetup'
+
+      - name: Print innosetup for debugging
+        run: |
+          cat innosetup/script.iss
+        shell: bash
+
       - name: Building the installer
         run: |
           cd innosetup
