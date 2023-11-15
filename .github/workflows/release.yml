@@ -28,7 +28,7 @@ jobs:
         with:
           regex: '#define MyAppVersion "[^"]+"'
           replacement: '#define MyAppVersion "${{ inputs.version }}"'
-          include: '*.iss'
+          include: '.*.iss'
           path: 'innosetup'
 
       - name: Print innosetup for debugging
