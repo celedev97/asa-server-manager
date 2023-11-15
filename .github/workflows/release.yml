@@ -1,11 +1,11 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: ["Build JAR Artifact"]
-    branches: [master]
-    types:
-      - completed
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -32,6 +32,8 @@ jobs:
 
     - uses: ncipollo/release-action@v1.13.0
       with:
+        name: ${{ inputs.version }}
+        tag: ${{ inputs.version }}
         artifacts: "innosetup/Output/*.exe"
         prerelease: true
         generateReleaseNotes: true
