@@ -15,22 +15,24 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    # download artifact asa_sm_jar
-    - uses: actions/download-artifact@v3
-      with:
-        name: asa_sm_jar
-        path: target
+      - uses: actions/checkout@v3
 
-    - name: Building the installer
-      run: |
-        cd innosetup
-        "%programfiles(x86)%\Inno Setup 6\iscc.exe" "script.iss"
-      shell: cmd
+      # download artifact asa_sm_jar
+      - uses: actions/download-artifact@v3
+        with:
+          name: asa_sm_jar
+          path: target
 
-    - uses: ncipollo/release-action@v1.13.0
-      with:
-        name: ${{ inputs.version }}
-        tag: ${{ inputs.version }}
-        artifacts: "innosetup/Output/*.exe"
-        prerelease: true
-        generateReleaseNotes: true
+      - name: Building the installer
+        run: |
+          cd innosetup
+          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "script.iss"
+        shell: cmd
+
+      - uses: ncipollo/release-action@v1.13.0
+        with:
+          name: ${{ inputs.version }}
+          tag: ${{ inputs.version }}
+          artifacts: "innosetup/Output/*.exe"
+          prerelease: true
+          generateReleaseNotes: true
