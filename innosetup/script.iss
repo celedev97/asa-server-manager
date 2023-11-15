@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ASA Server Manager"
-#define MyAppVersion "v0.0.1"
+#define MyAppVersion "v0.0.3-SNAPSHOT"
 #define MyAppPublisher "celedev97"
 #define MyAppURL "https://github.com/celedev97/asa-server-manager"
 #define MyAppExeName "go-java-launcher.exe"
