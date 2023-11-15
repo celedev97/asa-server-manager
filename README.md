@@ -19,14 +19,14 @@ As of now the installer is only for windows, we may do releases for linux later.
 
 ### Requirements
 
-- Java 17 or later, the installer should install it by default but if the program is not starting you may want to download it manually.
+- Java 17
 - Maven
-- IntelliJ Idea for the GUI Designer
+- IntelliJ Idea (for the GUI Designer)
 
 ## Contributing
 
-If you would like to contribute to ASA Server Manager, please fork the repository and submit a pull request or contact us on discord
+If you would like to contribute to ASA Server Manager, please fork the repository and submit a pull request or contact us on Discord/
 
 ## License
 
-ASA Server Manager is licensed under the MIT License. See LICENSE for more information.
+ASA Server Manager is licensed under the GPL 3 License. See LICENSE for more information.
