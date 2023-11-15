@@ -24,7 +24,7 @@ jobs:
           path: target
 
       - name: Modify innosetup version number
-        uses: mingjun97/file-regex-replace
+        uses: mingjun97/file-regex-replace@v1
         with:
           regex: '#define MyAppVersion "[^"]+"'
           replacement: '#define MyAppVersion "${{ inputs.version }}"'
