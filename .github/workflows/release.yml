@@ -12,7 +12,6 @@ permissions:
 
 jobs:
   release:
-    if: github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'refs/tags/v')
     runs-on: windows-latest
 
     steps:
@@ -22,7 +21,13 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: asa_sm_jar
-        path: target
+
+    #unzip the artifact???
+    - name: Extract tgz
+      uses: ihiroky/extract-action@v1
+      with:
+        file_path: asa_sm.zip
+        extract_dir: target
 
     - name: Building the installer
       run: |
