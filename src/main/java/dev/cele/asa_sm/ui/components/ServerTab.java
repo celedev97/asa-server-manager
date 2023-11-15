@@ -150,6 +150,7 @@ public class ServerTab extends JPanel {
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(configFile.toFile(), configDto);
             log.info("Saved configDto to " + configFile.toString() + " file");
+            configDto.setUnsaved(false);
         } catch (Exception e) {
             log.error("Error saving configDto to file", e);
         }
