@@ -41,6 +41,11 @@ public class UpdateService {
     public void checkForUpdates() {
         Release latestRelease = null;
 
+        if(currentVersion.contains("-SNAPSHOT")){
+            //don't check update if this is a snapshot
+            return;
+        }
+
         try {
             latestRelease = githubClient.getLatestRelease("celedev97", "asa-server-manager");
         }catch (Exception e){
@@ -56,7 +61,7 @@ public class UpdateService {
         }
 
         //regex for version number with optional starting v and with optional snapshot version, one capturing group for major, one for minor, one for patch
-        var versionRegex = Pattern.compile("v?(\\d+)\\.(\\d+)\\.(\\d+)(-SNAPSHOT)?");
+        var versionRegex = Pattern.compile("v?(\\d+)\\.(\\d+)\\.(\\d+)");
 
         var currentVersionMatcher = versionRegex.matcher(currentVersion);
         var newVersionMatcher = versionRegex.matcher(newVersion);

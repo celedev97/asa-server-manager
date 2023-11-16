@@ -6,7 +6,10 @@ import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
 import dev.cele.asa_sm.ui.components.ServerTab;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +26,7 @@ public class MainFrame extends JFrame {
     private final JTabbedPane tabbedPane = new JTabbedPane();
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
 
+    @SneakyThrows
     public MainFrame() {
         setTitle("ASA Server Manager");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -30,6 +34,12 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension(825, 600));
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
+        var iconResource = new ClassPathResource("icon.png");
+        setIconImage(
+                new ImageIcon(iconResource.getContentAsByteArray()).getImage()
+        );
+
 
         try {
             Files.createDirectories(Const.PROFILES_DIR);

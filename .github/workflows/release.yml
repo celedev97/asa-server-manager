@@ -1,44 +1,51 @@
-name: Release installer
+name: Release
 
 on:
-  push:
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+      - uses: actions/checkout@v3
 
-    - name: Configure application-prod.properties
-      run: |
-        python -c "import os; file = open('src/main/resources/application-prod.properties', 'w'); file.write(os.environ['APPLICATION_PROD_PROPERTIES']); file.close()"
-      env:
-        APPLICATION_PROD_PROPERTIES : ${{secrets.APPLICATION_PROD_PROPERTIES}}
-        
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml -Pprod
+      # download artifact asa_sm_jar
+      - uses: actions/download-artifact@v3
+        with:
+          name: asa_sm_jar
+          path: target
 
-    - name: Building the installer
-      run: |
-        cd innosetup
-        "%programfiles(x86)%\Inno Setup 6\iscc.exe" "script.iss"
-      shell: cmd
+      - name: Modify innosetup version number
+        uses: mingjun97/file-regex-replace@v1
+        with:
+          regex: '#define MyAppVersion "[^"]+"'
+          replacement: '#define MyAppVersion "${{ inputs.version }}"'
+          include: '.*.iss'
+          path: 'innosetup'
 
-    - uses: ncipollo/release-action@v1.13.0
-      with:
-        artifacts: "innosetup/Output/*.exe"
-        prerelease: true
-        generateReleaseNotes: true
+      - name: Print innosetup for debugging
+        run: |
+          cat innosetup/script.iss
+        shell: bash
+
+      - name: Building the installer
+        run: |
+          cd innosetup
+          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "script.iss"
+        shell: cmd
+
+      - uses: ncipollo/release-action@v1.13.0
+        with:
+          name: ${{ inputs.version }}
+          tag: ${{ inputs.version }}
+          artifacts: "innosetup/Output/*.exe"
+          prerelease: true
+          generateReleaseNotes: true
