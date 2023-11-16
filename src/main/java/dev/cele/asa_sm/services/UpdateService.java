@@ -145,7 +145,7 @@ public class UpdateService {
 
             // wait 4 seconds, and then run the installer, meanwhile close the current app to avoid file locking
             new ProcessBuilder(
-                    "cmd", "/c", "START", "/min", "cmd", "/c", "timeout", "/t", "4", "/nobreak", ">nul", "&&", tempFile.getAbsolutePath(), "/SILENT"
+                    tempFile.getAbsolutePath(), "/SILENT", "/FORCECLOSEAPPLICATIONS", "/RESTARTAPPLICATIONS"
             ).start();
             System.exit(0);
         }else{
