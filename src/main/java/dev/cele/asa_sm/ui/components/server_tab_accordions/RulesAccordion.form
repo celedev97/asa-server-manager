@@ -2,12 +2,12 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="dev.cele.asa_sm.ui.components.server_tab_accordions.RulesAccordion">
   <grid id="442c2" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="730" height="597"/>
+      <xy x="20" y="20" width="877" height="630"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="27dc6" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="27dc6" layout-manager="GridLayoutManager" row-count="13" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="Center"/>
         <properties/>
@@ -19,6 +19,38 @@
             </constraints>
             <properties>
               <text value="Enable Hardcore Mode"/>
+            </properties>
+          </component>
+          <component id="57fa4" class="javax.swing.JCheckBox" binding="disablePveFriendlyFireCheckBox" default-binding="true">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Disable Pve Friendly Fire"/>
+            </properties>
+          </component>
+          <component id="d1986" class="javax.swing.JCheckBox" binding="disablePvPFriendlyFireCheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Disable PvP Friendly Fire"/>
+            </properties>
+          </component>
+          <component id="1abf9" class="javax.swing.JCheckBox" binding="preventBuildingInResourceCheckBox" default-binding="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Prevent Building in Resource Rich Areas"/>
+            </properties>
+          </component>
+          <component id="b9ae3" class="javax.swing.JCheckBox" binding="disableCustomTributeFoldersCheckBox" default-binding="true">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Disable Custom Tribute Folders"/>
             </properties>
           </component>
           <component id="41429" class="javax.swing.JCheckBox" binding="enablePvPCheckBox" default-binding="true">
@@ -35,6 +67,258 @@
             </constraints>
             <properties>
               <text value="Enable Creative Mode"/>
+            </properties>
+          </component>
+          <component id="67002" class="javax.swing.JCheckBox" binding="enablePvPCaveBuildingCheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable PvP Cave Building"/>
+            </properties>
+          </component>
+          <component id="5f2e4" class="javax.swing.JCheckBox" binding="enableSignlePlayerSettingsCheckBox" default-binding="true">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable Signle Player Settings"/>
+            </properties>
+          </component>
+          <component id="20f8f" class="javax.swing.JCheckBox" binding="disablePvPRailgunCheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Disable PvP Railgun"/>
+            </properties>
+          </component>
+          <component id="8ef87" class="javax.swing.JCheckBox" binding="enablePveCryoSicknessCheckBox" default-binding="true">
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable Pve Cryo Sickness"/>
+            </properties>
+          </component>
+          <component id="8cbdc" class="javax.swing.JCheckBox" binding="disableSupllyCratesCheckBox" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Disable Suplly Crates"/>
+            </properties>
+          </component>
+          <component id="33829" class="javax.swing.JCheckBox" binding="allowCratesSpawnOnCheckBox" default-binding="true">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Crates Spawn on top of Structures"/>
+            </properties>
+          </component>
+          <component id="31713" class="javax.swing.JCheckBox" binding="randomSupplyCratesPointsCheckBox" default-binding="true">
+            <constraints>
+              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Random Supply Crates Points"/>
+            </properties>
+          </component>
+          <component id="e2326" class="dev.cele.asa_sm.ui.components.forms.SliderWithText">
+            <constraints>
+              <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="ba3eb" class="dev.cele.asa_sm.ui.components.forms.SliderWithText">
+            <constraints>
+              <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="67096" class="javax.swing.JCheckBox" binding="useCorpseLocatorCheckBox" default-binding="true">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Use Corpse Locator"/>
+            </properties>
+          </component>
+          <component id="f4ade" class="javax.swing.JCheckBox" binding="preventSpawnAnimationsCheckBox" default-binding="true">
+            <constraints>
+              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Prevent Spawn Animations"/>
+            </properties>
+          </component>
+          <component id="c2cea" class="javax.swing.JCheckBox" binding="allowUnlimitedRespecsCheckBox" default-binding="true">
+            <constraints>
+              <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Unlimited Respecs"/>
+            </properties>
+          </component>
+          <component id="1455d" class="javax.swing.JCheckBox" binding="allowPlatformSaddleMultiCheckBox" default-binding="true">
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Platform Saddle Multi Floors"/>
+            </properties>
+          </component>
+          <component id="264fc" class="dev.cele.asa_sm.ui.components.forms.SliderWithText">
+            <constraints>
+              <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="88950" class="dev.cele.asa_sm.ui.components.forms.SliderWithText">
+            <constraints>
+              <grid row="10" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="f2ad6" class="dev.cele.asa_sm.ui.components.forms.SliderWithText">
+            <constraints>
+              <grid row="12" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="97bed" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Fishing Loot Quality Multiplier"/>
+            </properties>
+          </component>
+          <component id="f8cbd" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Supply Crate Loot Quality Multiplier"/>
+            </properties>
+          </component>
+          <component id="f54b1" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Platform Saddle Build Area Bounds Multiplier"/>
+            </properties>
+          </component>
+          <component id="2b957" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Max Gateways on Saddles"/>
+            </properties>
+          </component>
+          <component id="a2d16" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Destroy Tames Over Level:"/>
+            </properties>
+          </component>
+          <grid id="3bcb9" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="11" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none" title="Difficulty Ovveride"/>
+            <children>
+              <component id="4649" class="javax.swing.JCheckBox" binding="enableDifficultyOverrideCheckBox" default-binding="true">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Enable Difficulty Override"/>
+                </properties>
+              </component>
+              <component id="cd9f9" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Max Dino Level:"/>
+                </properties>
+              </component>
+              <component id="d3d0f" class="dev.cele.asa_sm.ui.components.forms.SliderWithText">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="d0719" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="levels"/>
+                </properties>
+              </component>
+              <component id="ba9b4" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Difficulty Offset:"/>
+                </properties>
+              </component>
+              <component id="6eae3" class="dev.cele.asa_sm.ui.components.forms.SliderWithText">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+              </component>
+            </children>
+          </grid>
+          <component id="87e7c" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="x"/>
+            </properties>
+          </component>
+          <component id="effb1" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="x"/>
+            </properties>
+          </component>
+          <component id="8cdcc" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="x"/>
+            </properties>
+          </component>
+          <component id="56d53" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="12" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="levels"/>
+            </properties>
+          </component>
+          <component id="2793d" class="javax.swing.JCheckBox" binding="enablePvECaveBuildingCheckBox" default-binding="true">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable PvE Cave Building"/>
             </properties>
           </component>
         </children>
