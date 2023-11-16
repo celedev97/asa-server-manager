@@ -32,6 +32,7 @@ public class RulesAccordion {
     private JCheckBox allowPlatformSaddleMultiCheckBox;
     private JCheckBox enableDifficultyOverrideCheckBox;
     private JCheckBox enablePvECaveBuildingCheckBox;
+    private JCheckBox enableTributeDownloadsCheckBox;
 
     public RulesAccordion(AsaServerConfigDto configDto) {
     }
@@ -54,7 +55,7 @@ public class RulesAccordion {
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(13, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(14, 4, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1, BorderLayout.CENTER);
         enableHardcoreModeCheckBox = new JCheckBox();
         enableHardcoreModeCheckBox.setText("Enable Hardcore Mode");
@@ -77,9 +78,6 @@ public class RulesAccordion {
         enableCreativeModeCheckBox = new JCheckBox();
         enableCreativeModeCheckBox.setText("Enable Creative Mode");
         panel1.add(enableCreativeModeCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        enablePvECaveBuildingCheckBox = new JCheckBox();
-        enablePvECaveBuildingCheckBox.setText("Enable Pve Cave Building");
-        panel1.add(enablePvECaveBuildingCheckBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
         enablePvPCaveBuildingCheckBox = new JCheckBox();
         enablePvPCaveBuildingCheckBox.setText("Enable PvP Cave Building");
         panel1.add(enablePvPCaveBuildingCheckBox, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -170,6 +168,16 @@ public class RulesAccordion {
         final JLabel label12 = new JLabel();
         label12.setText("levels");
         panel1.add(label12, new GridConstraints(12, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        enablePvECaveBuildingCheckBox = new JCheckBox();
+        enablePvECaveBuildingCheckBox.setText("Enable PvE Cave Building");
+        panel1.add(enablePvECaveBuildingCheckBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel3, new GridConstraints(13, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel3.setBorder(BorderFactory.createTitledBorder(null, "Tribute Downloads", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        enableTributeDownloadsCheckBox = new JCheckBox();
+        enableTributeDownloadsCheckBox.setText("Enable Tribute Downloads");
+        panel3.add(enableTributeDownloadsCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final AccordionTopBar accordionTopBar1 = new AccordionTopBar();
         accordionTopBar1.setExpanded(true);
         accordionTopBar1.setTitle("Rules");
@@ -182,4 +190,5 @@ public class RulesAccordion {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }
