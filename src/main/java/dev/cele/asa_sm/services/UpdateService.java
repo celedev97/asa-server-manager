@@ -19,8 +19,12 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -127,14 +131,22 @@ public class UpdateService {
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("No exe asset found"));
 
-            File file = new RestTemplate().execute(asset.getBrowser_download_url(), HttpMethod.GET, null, clientHttpResponse -> {
-                File ret = File.createTempFile("asa_sm_update", "tmp.exe");
-                StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(ret));
-                return ret;
-            });
+
+            log.info("Downloading update...");
+
+            InputStream input = new URL(asset.getBrowser_download_url()).openStream();
+            var tempFile = File.createTempFile("asa_sm_update", ".exe");
+            Files.copy(input, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            input.close();
 
             //run cmd /c start "" "path/to/file.exe" /SILENT
-            Runtime.getRuntime().exec("cmd /c start \"\" \"" + file.getAbsolutePath() + "\" /SILENT");
+            log.info("Starting update process");
+            log.info("File path: " + tempFile.getAbsolutePath());
+
+            // wait 4 seconds, and then run the installer, meanwhile close the current app to avoid file locking
+            new ProcessBuilder(
+                    "cmd", "/c", "START", "/min", "cmd", "/c", "timeout", "/t", "4", "/nobreak", ">nul", "&&", tempFile.getAbsolutePath(), "/SILENT"
+            ).start();
             System.exit(0);
         }else{
             //open browser

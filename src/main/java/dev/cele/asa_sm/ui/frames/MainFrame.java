@@ -30,8 +30,8 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setTitle("ASA Server Manager");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(new Dimension(825, 600));
         setMinimumSize(new Dimension(825, 600));
+        setSize(new Dimension(1020, 890));
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -117,8 +117,6 @@ public class MainFrame extends JFrame {
                 addProfile();
             }
         });
-
-        pack();
     }
 
     private void addProfile() {

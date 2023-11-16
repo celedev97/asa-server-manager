@@ -17,6 +17,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static dev.cele.asa_sm.Const.ASA_STEAM_GAME_NUMBER;
+import static dev.cele.asa_sm.Const.TEMP_DIR;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class SteamCMDService {
     private final CommandRunnerService commandRunnerService;
 
     private final String WINDOWS_URL = "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip";
-    private final String STEAM_CMD_WIN_FOLDER = "steamcmd";
-    private final String STEAM_CMD_WIN_PATH = STEAM_CMD_WIN_FOLDER + File.separator + "steamcmd.exe";
+    private final Path STEAM_CMD_WIN_FOLDER = Path.of("steamcmd");
+    private final File STEAM_CMD_WIN_EXE_FILE = STEAM_CMD_WIN_FOLDER.resolve("steamcmd.exe").toFile();
 
 
     @PostConstruct
@@ -37,7 +38,7 @@ public class SteamCMDService {
         var exists = false;
 
         if(SystemUtils.IS_OS_WINDOWS) {
-            exists = new File(STEAM_CMD_WIN_PATH).exists();
+            exists = STEAM_CMD_WIN_EXE_FILE.exists();
         } else if(SystemUtils.IS_OS_LINUX) {
             var result = commandRunnerService.runCommand("which", "steamcmd");
             exists = result.getExitCode() == 0 && result.getOutput().contains("steamcmd");
@@ -67,27 +68,26 @@ public class SteamCMDService {
     @SneakyThrows
     private void windowsInstall() {
         //get a temp dir
-        var tempDir = SystemUtils.getJavaIoTmpDir().getAbsolutePath() + File.separator + "asa_sm";
-        Files.createDirectories(Path.of(tempDir));
+        Files.createDirectories(TEMP_DIR);
 
         //region download file from WINDOWS_URL to zipLocation
         logger.info("Downloading SteamCMD...");
         InputStream input = new URL(WINDOWS_URL).openStream();
 
         //download file to temp dir
-        var zipLocation = tempDir + File.separator + "steamcmd.zip";
-        Files.copy(input, Path.of(zipLocation), StandardCopyOption.REPLACE_EXISTING);
+        var zipLocation = Files.createTempFile(TEMP_DIR, "steamcmd", ".zip");
+        Files.copy(input, zipLocation, StandardCopyOption.REPLACE_EXISTING);
         input.close();
 
         logger.info("Download complete. Saved to "+zipLocation);
         //endregion
 
         //region unzip file
-        logger.info("Unzipping "+zipLocation);
-        ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipLocation));
+        logger.info("Unzipping "+zipLocation+" to "+STEAM_CMD_WIN_FOLDER);
+        ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipLocation.toFile()));
         ZipEntry zipEntry;
         while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-            var newFile = Path.of(tempDir + File.separator + zipEntry.getName());
+            var newFile = STEAM_CMD_WIN_FOLDER.resolve(zipEntry.getName());
 
             if (zipEntry.isDirectory()) {
                 Files.createDirectories(newFile);
@@ -102,15 +102,13 @@ public class SteamCMDService {
         }
         //endregion
 
-        //region move steamcmd.exe to STEAM_CMD_WIN_PATH
-        var steamcmdDownloaded = Path.of(tempDir + File.separator + "steamcmd.exe");
-        var steamcmdTarget = Path.of(STEAM_CMD_WIN_PATH);
 
-        Files.createDirectories(steamcmdTarget.getParent());
-        Files.move(steamcmdDownloaded, steamcmdTarget);
-
-        logger.info("Moved steamcmd.exe to "+steamcmdTarget);
-        //endregion
+        if(STEAM_CMD_WIN_EXE_FILE.exists()){
+            logger.info("SteamCMD installed successfully");
+        }else{
+            logger.error("Error installing SteamCMD");
+            throw new RuntimeException("Error installing SteamCMD");
+        }
     }
     //endregion
 
@@ -134,7 +132,7 @@ public class SteamCMDService {
         Files.createDirectories(installDir);
         var steamCMD = "steamcmd";
         if(SystemUtils.IS_OS_WINDOWS) {
-            steamCMD = STEAM_CMD_WIN_PATH;
+            steamCMD = STEAM_CMD_WIN_EXE_FILE.getAbsolutePath();
         }
 
         // steamcmd +force_install_dir ..\server\guid +login anonymous +app_update 2430930 validate +quit
