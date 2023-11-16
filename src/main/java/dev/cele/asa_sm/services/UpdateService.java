@@ -5,15 +5,23 @@ import dev.cele.asa_sm.dto.github.Release;
 import dev.cele.asa_sm.feign.GithubClient;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 @Service
@@ -94,7 +102,7 @@ public class UpdateService {
 
             if(response == 0){
                 try {
-                    Desktop.getDesktop().browse(URI.create(latestRelease.getAssets()[0].getBrowser_download_url()));
+                    downloadUpdate(latestRelease);
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error while opening download link: " + e.getMessage());
                     log.error("Error while opening download link: ", e);
@@ -108,6 +116,29 @@ public class UpdateService {
                     log.error("Error while writing ignoredVersion.txt: ", e);
                 }
             }
+        }
+    }
+
+    @SneakyThrows
+    private void downloadUpdate(Release latestRelease) {
+        if(SystemUtils.IS_OS_WINDOWS){
+            var asset = Arrays.stream(latestRelease.getAssets())
+                    .filter(a -> a.getName().endsWith(".exe"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("No exe asset found"));
+
+            File file = new RestTemplate().execute(asset.getBrowser_download_url(), HttpMethod.GET, null, clientHttpResponse -> {
+                File ret = File.createTempFile("asa_sm_update", "tmp.exe");
+                StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(ret));
+                return ret;
+            });
+
+            //run cmd /c start "" "path/to/file.exe" /SILENT
+            Runtime.getRuntime().exec("cmd /c start \"\" \"" + file.getAbsolutePath() + "\" /SILENT");
+            System.exit(0);
+        }else{
+            //open browser
+            Desktop.getDesktop().browse(new URI(latestRelease.getHtml_url()));
         }
     }
 

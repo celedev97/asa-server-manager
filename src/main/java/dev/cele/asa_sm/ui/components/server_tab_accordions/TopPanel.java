@@ -31,9 +31,6 @@ public class TopPanel {
     public JButton installVerifyButton;
     public JLabel installedLocationLabel;
 
-    private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
-
-
     private final AsaServerConfigDto configDto;
 
     public TopPanel(AsaServerConfigDto configDto) {
