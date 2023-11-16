@@ -21,6 +21,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={userappdata}\{#MyAppName}
 DisableProgramGroupPage=yes
 InfoBeforeFile=.\info.txt
+SetupIconFile=.\icon.ico
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputBaseFilename=asa_sm_setup
