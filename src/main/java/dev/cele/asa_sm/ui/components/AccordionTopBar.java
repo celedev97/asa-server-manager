@@ -1,6 +1,8 @@
 package dev.cele.asa_sm.ui.components;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.ui.FlatBorder;
+import com.formdev.flatlaf.ui.FlatRoundBorder;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -22,13 +24,18 @@ public class AccordionTopBar extends JPanel {
             if (centerComponent != null) {
                 centerComponent.setVisible(value);
             }
+            if(!value){
+                parent.setPreferredSize(new Dimension(parent.getPreferredSize().width, getHeight()));
+            }else{
+                parent.setPreferredSize(null);
+            }
         }
     }
 
     private final JButton expandButton = new JButton("˄");
 
     public AccordionTopBar() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(5,0));
 
         //add expand button
         expandButton.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_ROUND_RECT);
@@ -37,8 +44,16 @@ public class AccordionTopBar extends JPanel {
 
         //add Label
         add(label, BorderLayout.CENTER);
+        label.putClientProperty(FlatClientProperties.STYLE_CLASS, "large");
 
-        SwingUtilities.invokeLater(() -> setExpanded(expanded));
+        putClientProperty("Component.borderWidth", 4);
+
+        var border = new FlatRoundBorder();
+        setBorder(border);
+
+        SwingUtilities.invokeLater(() -> {
+            setExpanded(expanded);
+        });
     }
 
     public String getTitle() {

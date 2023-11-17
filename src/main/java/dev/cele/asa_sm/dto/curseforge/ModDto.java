@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class ModDto {
     private Integer id;
-    private Integer gameId;
+    //private Integer gameId;
     private String name;
     private String slug;
     private ModLinksDto links;

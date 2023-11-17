@@ -59,6 +59,7 @@ public class ServerTab extends JPanel {
         JPanel scrollPaneContent = new JPanel();
         scrollPaneContent.setLayout(new GridBagLayout());
         JScrollPane scrollPane = new JScrollPane(scrollPaneContent);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrollPane, BorderLayout.CENTER);

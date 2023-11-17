@@ -214,12 +214,16 @@ public class MainFrame extends JFrame {
         //region status bar
         var statusBar = new JPanel();
         statusBar.setLayout(new BorderLayout());
-        statusBar.setBorder(BorderFactory.createEtchedBorder());
+        statusBar.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+
+        statusBar.add(new JSeparator(), BorderLayout.NORTH);
 
         var statusLabel = new JLabel("ASA Server Manager");
+        statusLabel.setVerticalAlignment(SwingConstants.CENTER);
         statusBar.add(statusLabel, BorderLayout.WEST);
 
         var versionLabel = new JLabel("v" + updateService.getCurrentVersion());
+        versionLabel.setVerticalAlignment(SwingConstants.CENTER);
         statusBar.add(versionLabel, BorderLayout.EAST);
 
         add(statusBar, BorderLayout.SOUTH);

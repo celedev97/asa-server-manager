@@ -27,7 +27,7 @@ public class AdministrationAccordion {
     private NumberField serverPortField;
     private JCheckBox rconEnabledCheckBox;
     private AutoCompleteField mapNameField;
-    private JTextField modIDsField;
+    public JTextField modIDsField;
     private JButton modSearchButton;
     private NumberField peerPortField;
     private NumberField queryPortField;
@@ -112,7 +112,7 @@ public class AdministrationAccordion {
             //get jframe ancestor
             JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this.contentPane);
             //open mod search dialog
-            ModsDialog modsDialog = new ModsDialog(frame, configDto);
+            ModsDialog modsDialog = new ModsDialog(frame, configDto, this);
             modsDialog.setVisible(true);
         });
 

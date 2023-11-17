@@ -35,6 +35,7 @@ public class ModCacheService {
 
     public List<ModDto> getMods(String modIds) {
         List<Integer> requestedMods = Stream.of(modIds.split(","))
+                .filter(modId -> !modId.isEmpty())
                 .map(Integer::parseInt)
                 .toList();
 
