@@ -3,12 +3,9 @@ package dev.cele.asa_sm.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.enums.MapsEnum;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,19 +43,21 @@ public class AsaServerConfigDto {
 
     private String serverPassword = "";
     private String serverAdminPassword = "";
-    private String serverSpecatorPassword = "";
+    private String serverSpectatorPassword = "";
 
     private int serverPort = 7777;
     private int serverQueryPort = 27015;
     private int serverMaxPlayers = 70;
 
-    private boolean battlEye = false;
-    private String serverSpectatorPassword = "";
-    private String serverLocalIp = "";
+
     private boolean rconEnabled = false;
     private int rconPort = 32330;
     private int rconServerLogBuffer = 600;
+
     private String modIds = "";
+
+    private boolean battlEye = false;
+
     private int autoSavePeriod = 15;
 
     @JsonIgnore
@@ -73,7 +72,7 @@ public class AsaServerConfigDto {
 
         if (!serverPassword.isEmpty()) mainArgs.add("ServerPassword=" + serverPassword);
         if (!serverAdminPassword.isEmpty()) mainArgs.add("ServerAdminPassword=" + serverAdminPassword);
-        if (!serverSpecatorPassword.isEmpty()) mainArgs.add("SpectatorPassword=" + serverSpecatorPassword);
+        if (!serverSpectatorPassword.isEmpty()) mainArgs.add("SpectatorPassword=" + serverSpectatorPassword);
 
         //networking
         if (serverPort != 0) mainArgs.add("Port=" + serverPort);
