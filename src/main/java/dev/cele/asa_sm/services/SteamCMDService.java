@@ -1,6 +1,7 @@
 package dev.cele.asa_sm.services;
 
 import dev.cele.asa_sm.Const;
+import dev.cele.asa_sm.ui.frames.ProgressFrame;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,8 +31,7 @@ public class SteamCMDService {
     private final File STEAM_CMD_WIN_EXE_FILE = STEAM_CMD_WIN_FOLDER.resolve("steamcmd.exe").toFile();
 
 
-    @PostConstruct
-    public void init() {
+    public void checkSteamCMD() {
         logger.info("SteamCMDService initialized");
         //checking for install...
 
@@ -73,12 +73,38 @@ public class SteamCMDService {
         //region download file from WINDOWS_URL to zipLocation
         logger.info("Downloading SteamCMD...");
         InputStream input = new URL(WINDOWS_URL).openStream();
+        var zipLocation = Files.createTempFile(TEMP_DIR, "steamcmd", ".zip");
 
         //download file to temp dir
-        var zipLocation = Files.createTempFile(TEMP_DIR, "steamcmd", ".zip");
-        Files.copy(input, zipLocation, StandardCopyOption.REPLACE_EXISTING);
-        input.close();
+        var progressFrame = new ProgressFrame(null, "Downloading SteamCMD", "Downloading SteamCMD...", false);
+        progressFrame.launch(pf -> {
+            try {
+                //download file from input to zipLocation with progress bar
+                FileOutputStream output = new FileOutputStream(zipLocation.toFile());
 
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                long totalBytesRead = 0;
+                long fileSize = input.available();
+
+                while ((bytesRead = input.read(buffer)) != -1) {
+                    output.write(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+
+                    progressFrame.setProgress(
+                            (int) (totalBytesRead * 100 / fileSize)
+                    );
+                    logger.info("Downloaded " + totalBytesRead + " bytes out of " + fileSize + " bytes (" + (totalBytesRead * 100 / fileSize) + "%)");
+
+                    progressFrame.repaint();
+                }
+
+                input.close();
+                output.close();
+            }catch (Exception e){
+                throw new RuntimeException(e);
+            }
+        });
         logger.info("Download complete. Saved to "+zipLocation);
         //endregion
 

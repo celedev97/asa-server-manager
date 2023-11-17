@@ -3,6 +3,7 @@ package dev.cele.asa_sm.services;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.dto.github.Release;
 import dev.cele.asa_sm.feign.GithubClient;
+import dev.cele.asa_sm.ui.frames.ProgressFrame;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +58,11 @@ public class UpdateService {
 
         if(currentVersion.contains("-SNAPSHOT")){
             //don't check update if this is a snapshot
+            log.info("This is a snapshot version, skipping update check");
             return;
         }
+
+        log.info("Checking for updates...");
 
         try {
             latestRelease = githubClient.getLatestRelease("celedev97", "asa-server-manager");
@@ -138,7 +142,43 @@ public class UpdateService {
 
             InputStream input = new URL(asset.getBrowser_download_url()).openStream();
             var tempFile = File.createTempFile("asa_sm_update", ".exe");
-            Files.copy(input, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            //file copy from input to tempFile with progress bar
+
+            FileOutputStream output = new FileOutputStream(tempFile);
+
+            var progressFrame = new ProgressFrame(null, "Downloading Update", "Downloading update...", false);
+            progressFrame.launch(prog -> {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                long totalBytesRead = 0;
+                long fileSize = asset.getSize();
+                try{
+                    while ((bytesRead = input.read(buffer)) != -1) {
+                        output.write(buffer, 0, bytesRead);
+                        totalBytesRead += bytesRead;
+
+                        progressFrame.setProgress(
+                                (int) (totalBytesRead * 100 / fileSize)
+                        );
+                        log.info("Downloaded " + totalBytesRead + " bytes out of " + fileSize + " bytes (" + (totalBytesRead * 100 / fileSize) + "%)");
+
+                        progressFrame.repaint();
+
+                    }
+
+                    input.close();
+                    output.close();
+                }catch (Exception e){
+                    JOptionPane.showMessageDialog(null, "Error while downloading update: " + e.getMessage());
+                    log.error("Error while downloading update: ", e);
+                }
+            });
+            progressFrame.dispose();
+
+
+
+
             input.close();
 
             //run cmd /c start "" "path/to/file.exe" /SILENT

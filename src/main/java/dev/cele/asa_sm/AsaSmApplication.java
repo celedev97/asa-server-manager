@@ -1,6 +1,7 @@
 package dev.cele.asa_sm;
 
 import com.formdev.flatlaf.*;
+import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.services.UpdateService;
 import dev.cele.asa_sm.ui.frames.MainFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,9 @@ public class AsaSmApplication implements CommandLineRunner {
     @Autowired
     private UpdateService updateService;
 
+    @Autowired
+    private SteamCMDService steamCMDService;
+
     public static void main(String[] args) {
         new SpringApplicationBuilder(AsaSmApplication.class)
                 .web(WebApplicationType.NONE)
@@ -48,6 +52,7 @@ public class AsaSmApplication implements CommandLineRunner {
             IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
 
             updateService.checkForUpdates();
+            steamCMDService.checkSteamCMD();
 
 
             var frame = new MainFrame();
