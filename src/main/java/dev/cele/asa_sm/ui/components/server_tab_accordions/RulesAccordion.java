@@ -2,13 +2,16 @@ package dev.cele.asa_sm.ui.components.server_tab_accordions;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
 import dev.cele.asa_sm.ui.components.AccordionTopBar;
 import dev.cele.asa_sm.ui.components.forms.SliderWithText;
+import org.springframework.core.env.Environment;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.Arrays;
 
 public class RulesAccordion {
     private JCheckBox enableHardcoreModeCheckBox;
@@ -35,6 +38,13 @@ public class RulesAccordion {
     private JCheckBox enableTributeDownloadsCheckBox;
 
     public RulesAccordion(AsaServerConfigDto configDto) {
+        SwingUtilities.invokeLater(this::afterInit);
+    }
+
+    Environment environment = SpringApplicationContext.autoWire(Environment.class);
+    private void afterInit() {
+        var isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
+        contentPane.setVisible(isDev);
     }
 
     {
@@ -54,6 +64,7 @@ public class RulesAccordion {
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
+        contentPane.setVisible(true);
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(14, 4, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1, BorderLayout.CENTER);
