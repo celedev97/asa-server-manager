@@ -1,6 +1,7 @@
 package dev.cele.asa_sm.ui.components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.formdev.flatlaf.FlatClientProperties;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
@@ -97,9 +98,9 @@ public class ServerTab extends JPanel {
 
             //set the save button outline to red if unsaved
             if(unsaved){
-                topPanel.saveButton.putClientProperty("JComponent.outline", "error");
+                topPanel.saveButton.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
             } else {
-                topPanel.saveButton.putClientProperty("JComponent.outline", null);
+                topPanel.saveButton.putClientProperty(FlatClientProperties.OUTLINE, null);
             }
         });
 

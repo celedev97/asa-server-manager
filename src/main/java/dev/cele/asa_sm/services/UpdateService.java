@@ -4,6 +4,7 @@ import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.dto.github.Release;
 import dev.cele.asa_sm.feign.GithubClient;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
 public class UpdateService {
     private final GithubClient githubClient;
 
+    @Getter
     @Value("${application.version}")
     private String currentVersion;
 
