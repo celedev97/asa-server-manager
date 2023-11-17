@@ -1,12 +1,14 @@
 package dev.cele.asa_sm.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.enums.MapsEnum;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -65,20 +67,47 @@ public class AsaServerConfigDto {
 
         mainArgs.add(map);
         mainArgs.add("listen");
+
+        //name and password
         if (!serverName.isEmpty()) mainArgs.add("SessionName=" + serverName);
+
         if (!serverPassword.isEmpty()) mainArgs.add("ServerPassword=" + serverPassword);
         if (!serverAdminPassword.isEmpty()) mainArgs.add("ServerAdminPassword=" + serverAdminPassword);
+        if (!serverSpecatorPassword.isEmpty()) mainArgs.add("SpectatorPassword=" + serverSpecatorPassword);
+
+        //networking
         if (serverPort != 0) mainArgs.add("Port=" + serverPort);
         if (serverQueryPort != 0) mainArgs.add("QueryPort=" + serverQueryPort);
         if (serverMaxPlayers != 0) mainArgs.add("MaxPlayers=" + serverMaxPlayers);
 
+        //TODO: move RCON config to the ini file?
+        if (rconEnabled) {
+            mainArgs.add("RCONEnabled=True");
+            mainArgs.add("RCONPort=" + rconPort);
+            mainArgs.add("RCONServerGameLogBuffer=" + rconServerLogBuffer);
+        }
+
+
+        //extra separate args
         List<String> extraArgs = new ArrayList<>();
         if (!battlEye) {
             extraArgs.add("-NoBattlEye");
         }
 
+        if(!modIds.isEmpty()){
+            extraArgs.add("-mods=" + modIds);
+        }
+
         List<String> finalCommand = new ArrayList<>();
-        finalCommand.add("servers" + File.separator + guid + File.separator + "ShooterGame" + File.separator + "Binaries" + File.separator + "Win64" + File.separator + "ArkAscendedServer.exe");
+        finalCommand.add(
+                Const.SERVERS_DIR
+                        .resolve(guid)
+                        .resolve("ShooterGame")
+                        .resolve("Binaries")
+                        .resolve("Win64")
+                        .resolve("ArkAscendedServer.exe")
+                        .toAbsolutePath().toString()
+        );
         finalCommand.add(String.join("?", mainArgs));
         finalCommand.addAll(extraArgs);
 

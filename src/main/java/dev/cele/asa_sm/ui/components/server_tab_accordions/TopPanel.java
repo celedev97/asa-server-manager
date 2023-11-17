@@ -47,7 +47,6 @@ public class TopPanel {
         profileNameField.setText(configDto.getProfileName());
         profileNameField.getDocument().addDocumentListener(new SimpleDocumentListener(text -> {
             configDto.setProfileName(text);
-            configDto.setUnsaved(true);
         }));
 
         saveButton.addActionListener(e -> {
@@ -94,6 +93,7 @@ public class TopPanel {
         label1.setText("Profile ID:");
         contentPane.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         importExportButton = new JButton();
+        importExportButton.setEnabled(false);
         importExportButton.setText("Import/Export");
         contentPane.add(importExportButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         guidLabel = new JLabel();
@@ -101,6 +101,7 @@ public class TopPanel {
         guidLabel.setText("{GUID-GUID-GUID}");
         contentPane.add(guidLabel, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         findButton = new JButton();
+        findButton.setEnabled(false);
         findButton.setText("Find");
         contentPane.add(findButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
@@ -130,6 +131,7 @@ public class TopPanel {
         startButton.setText("Start");
         contentPane.add(startButton, new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         rconButton = new JButton();
+        rconButton.setEnabled(false);
         rconButton.setText("RCON");
         contentPane.add(rconButton, new GridConstraints(3, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         installVerifyButton = new JButton();
@@ -143,5 +145,6 @@ public class TopPanel {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }
 

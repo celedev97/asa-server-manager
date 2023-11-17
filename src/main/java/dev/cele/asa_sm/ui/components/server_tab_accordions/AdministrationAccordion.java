@@ -1,5 +1,6 @@
 package dev.cele.asa_sm.ui.components.server_tab_accordions;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
@@ -47,8 +48,11 @@ public class AdministrationAccordion {
         serverNameLengthLabel.setText(String.valueOf(configDto.getServerName().length()));
 
         serverPasswordField.setText(configDto.getServerPassword());
+        serverPasswordField.putClientProperty("PasswordField.showRevealButton", true);
         adminPasswordField.setText(configDto.getServerAdminPassword());
+        adminPasswordField.putClientProperty("PasswordField.showRevealButton", true);
         spectatorPasswordField.setText(configDto.getServerSpectatorPassword());
+        spectatorPasswordField.putClientProperty("PasswordField.showRevealButton", true);
 
         serverPortField.setValue(configDto.getServerPort());
         peerPortField.setValue(configDto.getServerPort() + 1);
