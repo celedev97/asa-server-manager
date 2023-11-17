@@ -25,7 +25,6 @@ public class ProcessDialog extends JDialog implements SimpleLogger {
     {
         StyleConstants.setForeground(red, Color.RED);
     }
-    Font bigger;
 
     public ProcessDialog(JFrame parent, String title, String[] commandAndArgs) {
         this(parent, title, commandAndArgs, null);
@@ -40,10 +39,10 @@ public class ProcessDialog extends JDialog implements SimpleLogger {
         setLayout(new BorderLayout());
 
         //textpane
-        var font = new Font("Consolas", Font.PLAIN, 14);
-
         textPane.setEditable(false);
-        textPane.setFont(font);
+        textPane.setFont(
+                UIManager.getFont( "monospaced.font" ).deriveFont( 14f )
+        );
         textPane.setBackground(new Color(30,31,34,255));
         DefaultCaret caret = (DefaultCaret)textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
