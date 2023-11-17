@@ -25,7 +25,7 @@ As of now the installer is only for windows, we may do releases for linux later.
 
 ## Contributing
 
-If you would like to contribute to ASA Server Manager, please fork the repository and submit a pull request or contact us on Discord/
+If you would like to contribute to ASA Server Manager, please fork the repository and submit a pull request or contact us on Discord.
 
 ## License
 
