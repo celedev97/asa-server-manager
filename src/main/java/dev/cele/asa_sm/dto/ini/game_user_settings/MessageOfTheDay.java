@@ -5,7 +5,7 @@ import dev.cele.asa_sm.dto.ini.IniValue;
 import lombok.Getter;
 import lombok.Setter;
 
-@IniSection(name = "MessageOfTheDay")
+@IniSection("MessageOfTheDay")
 @Getter @Setter
 public class MessageOfTheDay {
     @IniValue("Duration")

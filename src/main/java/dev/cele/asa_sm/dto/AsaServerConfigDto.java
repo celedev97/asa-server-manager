@@ -2,9 +2,11 @@ package dev.cele.asa_sm.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.cele.asa_sm.Const;
+import dev.cele.asa_sm.dto.ini.game_user_settings.GameUserSettingsINI;
 import dev.cele.asa_sm.enums.MapsEnum;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.function.Consumer;
 
 @Getter
 @Setter
+@FieldNameConstants
 public class AsaServerConfigDto {
 
     //region stuff for the unsaved variable
@@ -64,6 +67,8 @@ public class AsaServerConfigDto {
     private Boolean enableCreativeMode = false;
     private Boolean disablePvEFriendlyFire = false;
     //endregion
+
+    GameUserSettingsINI gameUserSettingsINI = new GameUserSettingsINI();
 
 
 

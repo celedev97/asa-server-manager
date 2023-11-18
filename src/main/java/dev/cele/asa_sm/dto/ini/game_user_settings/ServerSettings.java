@@ -5,7 +5,7 @@ import dev.cele.asa_sm.dto.ini.IniValue;
 import lombok.Getter;
 import lombok.Setter;
 
-@IniSection(name = "ServerSettings")
+@IniSection("ServerSettings")
 @Getter @Setter
 public class ServerSettings {
     //General

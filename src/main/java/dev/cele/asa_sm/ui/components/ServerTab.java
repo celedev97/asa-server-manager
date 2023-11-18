@@ -5,6 +5,9 @@ import com.formdev.flatlaf.FlatClientProperties;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
+import dev.cele.asa_sm.dto.ini.IniExtraMap;
+import dev.cele.asa_sm.dto.ini.IniSection;
+import dev.cele.asa_sm.dto.ini.IniValue;
 import dev.cele.asa_sm.services.CommandRunnerService;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
@@ -12,15 +15,24 @@ import dev.cele.asa_sm.ui.components.server_tab_accordions.RulesAccordion;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.TopPanel;
 import dev.cele.asa_sm.ui.frames.ProcessDialog;
 import lombok.Getter;
+import lombok.SneakyThrows;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public class ServerTab extends JPanel {
 
@@ -84,7 +96,10 @@ public class ServerTab extends JPanel {
         //endregion
 
 
-        detectInstalled();
+        if(detectInstalled()){
+            //if the server is installed read the ini file and populate the configDto
+            readAllIniFiles();
+        }
 
 
         configDto.addUnsavedChangeListener((unsaved) -> {
@@ -104,6 +119,93 @@ public class ServerTab extends JPanel {
                 topPanel.saveButton.putClientProperty(FlatClientProperties.OUTLINE, null);
             }
         });
+
+    }
+
+    private void readAllIniFiles(){
+        var gameUserSettingsIniFile = Const.SERVERS_DIR
+                .resolve(configDto.getGuid())
+                .resolve("ShooterGame")
+                .resolve("Saved")
+                .resolve("Config")
+                .resolve("WindowsServer")
+                .resolve("GameUserSettings.ini")
+                .toFile();
+
+        readIniFile(configDto.getGameUserSettingsINI(), gameUserSettingsIniFile);
+    }
+
+    @SneakyThrows
+    private void readIniFile(Object iniDtoObject, File iniFile) {
+
+        //use ini4j to read the ini file
+        Ini ini = new Ini(iniFile);
+        Map<String, Profile.Section> gameUserSettingsMap = ini.entrySet().stream()
+                .collect(toMap(it -> it.getKey(), it -> it.getValue()));
+
+        //read recognized sections from dto
+        var iniDtoClass = iniDtoObject.getClass();
+        var allFields = iniDtoClass.getDeclaredFields();
+        var sections = Arrays.stream(allFields)
+                .filter(field -> {;
+                    var hasAnnotation = field.isAnnotationPresent(IniSection.class);
+                    var classHasAnnotation = field.getType().isAnnotationPresent(IniSection.class);
+                    return hasAnnotation || classHasAnnotation;
+                })
+                .toList();
+
+        //loop over sections
+        for(Field sectionField: sections) {
+            //finding section info/dto/class
+            var sectionName = sectionField.getName();
+            if(sectionField.isAnnotationPresent(IniSection.class) && !sectionField.getAnnotation(IniSection.class).value().isEmpty()){
+                sectionName = sectionField.getAnnotation(IniSection.class).value();
+            }
+            if(sectionField.getType().isAnnotationPresent(IniSection.class) && !sectionField.getType().getAnnotation(IniSection.class).value().isEmpty()){
+                sectionName = sectionField.getType().getAnnotation(IniSection.class).value();
+            }
+
+            if(!gameUserSettingsMap.containsKey(sectionName)){
+                log.info("Section " + sectionName + " not found in ini file");
+                continue;
+            }
+
+            var sectionIniContent = gameUserSettingsMap.remove(sectionName);
+            var sectionFieldClass = sectionField.getType();
+            sectionField.setAccessible(true);
+            var sectionFieldObject = sectionField.get(iniDtoObject);
+
+
+            log.info("Reading section " + sectionName);
+
+            //reading fields inside the sectionField class
+            for(Field iniField: sectionFieldClass.getDeclaredFields()){
+                var fieldName = iniField.isAnnotationPresent(IniValue.class) ? iniField.getAnnotation(IniValue.class).value() : iniField.getName();
+                if(sectionIniContent.containsKey(fieldName)){
+                    var fieldValueToSet = sectionIniContent.get(fieldName, iniField.getType());
+                    log.info("Setting field " + fieldName + " to " + fieldValueToSet);
+                    iniField.setAccessible(true);
+                    iniField.set(sectionFieldObject, fieldValueToSet);
+                }
+            }
+        }
+        log.info("Unrecognized sections: " + gameUserSettingsMap.keySet().stream().collect(Collectors.joining(", ")));
+        var extraSectionsContainer = Arrays.stream(iniDtoClass.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(IniExtraMap.class))
+                .findFirst();
+        if(extraSectionsContainer.isPresent()){
+            Map<String, Map<String, Object>> extraSections = gameUserSettingsMap.entrySet().stream().collect(
+                    toMap(
+                            it -> it.getKey(),
+                            it -> it.getValue().entrySet().stream().collect(toMap(it2 -> it2.getKey(), it2 -> it2.getValue()))
+                    )
+            );
+
+            log.info("Found extra sections container, injecting remaining sections there");
+            var extraSectionsContainerField = extraSectionsContainer.get();
+            extraSectionsContainerField.setAccessible(true);
+            extraSectionsContainerField.set(iniDtoObject, extraSections);
+        }
 
     }
 

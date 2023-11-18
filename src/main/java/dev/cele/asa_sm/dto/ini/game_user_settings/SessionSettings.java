@@ -5,7 +5,7 @@ import dev.cele.asa_sm.dto.ini.IniValue;
 import lombok.Getter;
 import lombok.Setter;
 
-@IniSection(name = "SessionSettings")
+@IniSection("SessionSettings")
 @Getter @Setter
 public class SessionSettings {
     @IniValue("MultiHome")
