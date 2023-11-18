@@ -18,7 +18,7 @@ public class RulesAccordion {
     private JCheckBox enablePvPCheckBox;
     private JCheckBox enableCreativeModeCheckBox;
     public JPanel contentPane;
-    private JCheckBox disablePveFriendlyFireCheckBox;
+    private JCheckBox disablePvEFriendlyFireCheckBox;
     private JCheckBox disablePvPFriendlyFireCheckBox;
     private JCheckBox preventBuildingInResourceCheckBox;
     private JCheckBox enableSignlePlayerSettingsCheckBox;
@@ -37,7 +37,10 @@ public class RulesAccordion {
     private JCheckBox enablePvECaveBuildingCheckBox;
     private JCheckBox enableTributeDownloadsCheckBox;
 
+
+    private AsaServerConfigDto configDto;
     public RulesAccordion(AsaServerConfigDto configDto) {
+        this.configDto = configDto;
         SwingUtilities.invokeLater(this::afterInit);
     }
 
@@ -45,6 +48,26 @@ public class RulesAccordion {
     private void afterInit() {
         var isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
         contentPane.setVisible(isDev);
+
+        enableHardcoreModeCheckBox.setSelected(configDto.getHardcore());
+        enableHardcoreModeCheckBox.addActionListener(e ->
+                configDto.setHardcore(enableHardcoreModeCheckBox.isSelected())
+        );
+
+        enablePvPCheckBox.setSelected(configDto.getEnablePvP());
+        enablePvPCheckBox.addActionListener(e ->
+                configDto.setEnablePvP(enablePvPCheckBox.isSelected())
+        );
+
+        enableCreativeModeCheckBox.setSelected(configDto.getEnableCreativeMode());
+        enableCreativeModeCheckBox.addActionListener(e ->
+                configDto.setEnableCreativeMode(enableCreativeModeCheckBox.isSelected())
+        );
+
+        disablePvEFriendlyFireCheckBox.setSelected(configDto.getDisablePvEFriendlyFire());
+        disablePvEFriendlyFireCheckBox.addActionListener(e ->
+                configDto.setDisablePvEFriendlyFire(disablePvEFriendlyFireCheckBox.isSelected())
+        );
     }
 
     {
@@ -71,9 +94,9 @@ public class RulesAccordion {
         enableHardcoreModeCheckBox = new JCheckBox();
         enableHardcoreModeCheckBox.setText("Enable Hardcore Mode");
         panel1.add(enableHardcoreModeCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        disablePveFriendlyFireCheckBox = new JCheckBox();
-        disablePveFriendlyFireCheckBox.setText("Disable Pve Friendly Fire");
-        panel1.add(disablePveFriendlyFireCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disablePvEFriendlyFireCheckBox = new JCheckBox();
+        disablePvEFriendlyFireCheckBox.setText("Disable Pve Friendly Fire");
+        panel1.add(disablePvEFriendlyFireCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         disablePvPFriendlyFireCheckBox = new JCheckBox();
         disablePvPFriendlyFireCheckBox.setText("Disable PvP Friendly Fire");
         panel1.add(disablePvPFriendlyFireCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

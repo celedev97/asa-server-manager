@@ -35,6 +35,7 @@ public class AsaServerConfigDto {
     }
     //endregion
 
+    //region Administration
     private String map = MapsEnum.THE_ISLAND.getMapName();
     private String guid = UUID.randomUUID().toString();
 
@@ -49,12 +50,22 @@ public class AsaServerConfigDto {
     private int serverQueryPort = 27015;
     private int serverMaxPlayers = 70;
 
-
     private boolean rconEnabled = false;
     private int rconPort = 32330;
     private int rconServerLogBuffer = 600;
 
     private String modIds = "";
+    //endregion
+
+
+    //region Rules
+    private Boolean hardcore = false;
+    private Boolean enablePvP = true;
+    private Boolean enableCreativeMode = false;
+    private Boolean disablePvEFriendlyFire = false;
+    //endregion
+
+
 
     private boolean battlEye = false;
 
