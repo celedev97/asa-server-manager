@@ -1,6 +1,8 @@
 package dev.cele.asa_sm;
 
-import com.formdev.flatlaf.*;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.IntelliJTheme;
+import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.services.UpdateService;
 import dev.cele.asa_sm.ui.frames.MainFrame;
@@ -14,10 +16,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 
-import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 
 @SpringBootApplication
 @EnableFeignClients("dev.cele.asa_sm")
@@ -33,6 +33,10 @@ public class AsaSmApplication implements CommandLineRunner {
     @Autowired
     private SteamCMDService steamCMDService;
 
+    //this is needed to get the application context in the static main method
+    @Autowired
+    private SpringApplicationContext springApplicationContext;
+
     public static void main(String[] args) {
         new SpringApplicationBuilder(AsaSmApplication.class)
                 .web(WebApplicationType.NONE)
@@ -43,29 +47,29 @@ public class AsaSmApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        var argsList = Arrays.stream(args).toList();
 
-        if(argsList.contains("--cli")) {
-            SpringApplication.exit(appContext, () -> 0);
-        } else{
-            FlatLaf.registerCustomDefaultsSource( "dev.cele.asa_sm.themes" );
-            IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
+        FlatLaf.registerCustomDefaultsSource( "dev.cele.asa_sm.themes" );
+        IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
 
+        new Thread(() -> {
             updateService.checkForUpdates();
+        }).start();
+
+        new Thread(() -> {
             steamCMDService.checkSteamCMD();
+        }).start();
 
 
-            var frame = new MainFrame();
-            frame.setVisible(true);
-            frame.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e)
-                {
-                    log.info("Closing ASA Server Manager");
-                    SpringApplication.exit(appContext, () -> 0);
-                }
-            });
-        }
+        var frame = new MainFrame();
+        frame.setVisible(true);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e)
+            {
+                log.info("Closing ASA Server Manager");
+                SpringApplication.exit(appContext, () -> 0);
+            }
+        });
     }
 
 }
