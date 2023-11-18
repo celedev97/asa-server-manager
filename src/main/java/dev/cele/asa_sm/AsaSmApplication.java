@@ -6,6 +6,7 @@ import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.services.UpdateService;
 import dev.cele.asa_sm.ui.frames.MainFrame;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -22,20 +24,18 @@ import java.awt.event.WindowEvent;
 @SpringBootApplication
 @EnableFeignClients("dev.cele.asa_sm")
 @Slf4j
+@RequiredArgsConstructor
 public class AsaSmApplication implements CommandLineRunner {
 
-    @Autowired
+    @Autowired @Lazy
     private ApplicationContext appContext;
 
-    @Autowired
-    private UpdateService updateService;
+    private final UpdateService updateService;
+    private final SteamCMDService steamCMDService;
 
-    @Autowired
-    private SteamCMDService steamCMDService;
-
-    //this is needed to get the application context in the static main method
-    @Autowired
-    private SpringApplicationContext springApplicationContext;
+    //this is needed since the beans are initialized lazily,
+    // and this bean is needed for the UI to have access to the beans
+    private final SpringApplicationContext springApplicationContext;
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(AsaSmApplication.class)
