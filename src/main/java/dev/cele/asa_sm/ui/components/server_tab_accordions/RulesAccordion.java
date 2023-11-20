@@ -69,25 +69,16 @@ public class RulesAccordion {
         var isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
         contentPane.setVisible(isDev);
 
-        enableHardcoreModeCheckBox.setSelected(configDto.getHardcore());
+        enableHardcoreModeCheckBox.setSelected(configDto.getGameUserSettingsINI().getServerSettings().getServerHardcore());
         enableHardcoreModeCheckBox.addActionListener(e ->
-                configDto.setHardcore(enableHardcoreModeCheckBox.isSelected())
+                configDto.getGameUserSettingsINI().getServerSettings().setServerHardcore(enableHardcoreModeCheckBox.isSelected())
         );
 
-        enablePvPCheckBox.setSelected(configDto.getEnablePvP());
+        enablePvPCheckBox.setSelected(!configDto.getGameUserSettingsINI().getServerSettings().getServerPVE());
         enablePvPCheckBox.addActionListener(e ->
-                configDto.setEnablePvP(enablePvPCheckBox.isSelected())
+                configDto.getGameUserSettingsINI().getServerSettings().setServerPVE(!enablePvPCheckBox.isSelected())
         );
 
-        enableCreativeModeCheckBox.setSelected(configDto.getEnableCreativeMode());
-        enableCreativeModeCheckBox.addActionListener(e ->
-                configDto.setEnableCreativeMode(enableCreativeModeCheckBox.isSelected())
-        );
-
-        disablePvEFriendlyFireCheckBox.setSelected(configDto.getDisablePvEFriendlyFire());
-        disablePvEFriendlyFireCheckBox.addActionListener(e ->
-                configDto.setDisablePvEFriendlyFire(disablePvEFriendlyFireCheckBox.isSelected())
-        );
     }
 
     {
@@ -109,7 +100,7 @@ public class RulesAccordion {
         contentPane.setLayout(new BorderLayout(0, 0));
         contentPane.setVisible(true);
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(24, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(25, 4, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1, BorderLayout.CENTER);
         enableHardcoreModeCheckBox = new JCheckBox();
         enableHardcoreModeCheckBox.setText("Enable Hardcore Mode");
@@ -381,10 +372,10 @@ public class RulesAccordion {
         useServerTimeCheckBox.setText("Use Server Time");
         panel8.add(useServerTimeCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label35 = new JLabel();
-        label35.setText("Label");
+        label35.setText("Start Time");
         panel8.add(label35, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label36 = new JLabel();
-        label36.setText("Label");
+        label36.setText("Stop Time");
         panel8.add(label36, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel9 = new JPanel();
         panel9.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
@@ -400,6 +391,81 @@ public class RulesAccordion {
         panel10.add(timeField2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer4 = new Spacer();
         panel10.add(spacer4, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final JPanel panel11 = new JPanel();
+        panel11.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel11, new GridConstraints(19, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label37 = new JLabel();
+        label37.setText("Max Players in Tribe:");
+        panel11.add(label37, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final SliderWithText sliderWithText19 = new SliderWithText();
+        panel11.add(sliderWithText19, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label38 = new JLabel();
+        label38.setText("players");
+        panel11.add(label38, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label39 = new JLabel();
+        label39.setText("Tribe Name Change Cooldown");
+        panel11.add(label39, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final SliderWithText sliderWithText20 = new SliderWithText();
+        panel11.add(sliderWithText20, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label40 = new JLabel();
+        label40.setText("minutes");
+        panel11.add(label40, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label41 = new JLabel();
+        label41.setText("Tribe Slot Reuse Cooldown");
+        panel11.add(label41, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final SliderWithText sliderWithText21 = new SliderWithText();
+        panel11.add(sliderWithText21, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label42 = new JLabel();
+        label42.setText("minutes");
+        panel11.add(label42, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        allowTribeAlliancesCheckBox = new JCheckBox();
+        allowTribeAlliancesCheckBox.setText("Allow Tribe Alliances");
+        panel11.add(allowTribeAlliancesCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label43 = new JLabel();
+        label43.setText("Max Alliances Per Tribe");
+        panel11.add(label43, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final SliderWithText sliderWithText22 = new SliderWithText();
+        panel11.add(sliderWithText22, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label44 = new JLabel();
+        label44.setText("Max Tribes Per Alliance");
+        panel11.add(label44, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final SliderWithText sliderWithText23 = new SliderWithText();
+        panel11.add(sliderWithText23, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JPanel panel12 = new JPanel();
+        panel12.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel12, new GridConstraints(20, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel12.setBorder(BorderFactory.createTitledBorder(null, "PvE \"Tribe Warfare\" Options", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        allowTribeWarfareCheckBox = new JCheckBox();
+        allowTribeWarfareCheckBox.setText("Allow Tribe Warfare");
+        panel12.add(allowTribeWarfareCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        allowCancellingTribeWarfareCheckBox = new JCheckBox();
+        allowCancellingTribeWarfareCheckBox.setText("Allow Cancelling Tribe Warfare");
+        panel12.add(allowCancellingTribeWarfareCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel13 = new JPanel();
+        panel13.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel13, new GridConstraints(21, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel13.setBorder(BorderFactory.createTitledBorder(null, "Custom Recipes Options", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        allowCustomRecipesCheckBox = new JCheckBox();
+        allowCustomRecipesCheckBox.setText("Allow Custom Recipes");
+        panel13.add(allowCustomRecipesCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer5 = new Spacer();
+        panel13.add(spacer5, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final JLabel label45 = new JLabel();
+        label45.setText("Effectiveness Multiplier");
+        panel13.add(label45, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final SliderWithText sliderWithText24 = new SliderWithText();
+        panel13.add(sliderWithText24, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label46 = new JLabel();
+        label46.setText("x");
+        panel13.add(label46, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label47 = new JLabel();
+        label47.setText("Skill Multiplier");
+        panel13.add(label47, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final SliderWithText sliderWithText25 = new SliderWithText();
+        panel13.add(sliderWithText25, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label48 = new JLabel();
+        label48.setText("x");
+        panel13.add(label48, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final AccordionTopBar accordionTopBar1 = new AccordionTopBar();
         accordionTopBar1.setExpanded(true);
         accordionTopBar1.setTitle("Rules");
