@@ -25,7 +25,7 @@ public class AccordionTopBar extends JPanel {
                 centerComponent.setVisible(value);
             }
             if(!value){
-                parent.setPreferredSize(new Dimension(parent.getPreferredSize().width, getHeight()));
+                parent.setPreferredSize(new Dimension(parent.getPreferredSize().width, getHeight()+4));
             }else{
                 parent.setPreferredSize(null);
             }
@@ -46,10 +46,18 @@ public class AccordionTopBar extends JPanel {
         add(label, BorderLayout.CENTER);
         label.putClientProperty(FlatClientProperties.STYLE_CLASS, "large");
 
-        putClientProperty("Component.borderWidth", 4);
-
-        var border = new FlatRoundBorder();
-        setBorder(border);
+        new Thread(() -> {
+            var border = BorderFactory.createStrokeBorder(new BasicStroke(1f), UIManager.getColor("Component.borderColor"));
+            JPanel parent;
+            while((parent = (JPanel)getParent()) == null){
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            parent.setBorder(border);
+        }).start();
 
         SwingUtilities.invokeLater(() -> {
             setExpanded(expanded);
