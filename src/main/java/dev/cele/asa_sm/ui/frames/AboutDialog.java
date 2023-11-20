@@ -6,11 +6,11 @@ import dev.cele.asa_sm.services.UpdateService;
 import javax.swing.*;
 import java.awt.*;
 
-public class AboutFrame extends JDialog {
+public class AboutDialog extends JDialog {
 
     private UpdateService updateService = SpringApplicationContext.autoWire(UpdateService.class);
 
-    public AboutFrame(Frame owner) {
+    public AboutDialog(Frame owner) {
         super(owner, "About", true);
 
         setLayout(new GridBagLayout());

@@ -61,13 +61,6 @@ public class AsaServerConfigDto {
     //endregion
 
 
-    //region Rules
-    private Boolean hardcore = false;
-    private Boolean enablePvP = true;
-    private Boolean enableCreativeMode = false;
-    private Boolean disablePvEFriendlyFire = false;
-    //endregion
-
     GameUserSettingsINI gameUserSettingsINI = new GameUserSettingsINI();
 
 

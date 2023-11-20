@@ -2,7 +2,6 @@ package dev.cele.asa_sm.ui.frames;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLaf;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
@@ -11,7 +10,6 @@ import dev.cele.asa_sm.ui.components.ServerTab;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -185,7 +183,7 @@ public class MainFrame extends JFrame {
         var settingsMenuItem = new JMenuItem("Settings");
         settingsMenuItem.setMnemonic('S');
         settingsMenuItem.addActionListener(e -> {
-            var settingsFrame = new SettingsFrame(this);
+            var settingsFrame = new SettingsDialog(this);
             settingsFrame.setVisible(true);
         });
         settingsMenu.add(settingsMenuItem);
@@ -200,7 +198,7 @@ public class MainFrame extends JFrame {
         var aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.setMnemonic('A');
         aboutMenuItem.addActionListener(e -> {
-            var aboutFrame = new AboutFrame(this);
+            var aboutFrame = new AboutDialog(this);
             aboutFrame.setVisible(true);
         });
         helpMenu.add(aboutMenuItem);

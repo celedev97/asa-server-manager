@@ -3,6 +3,7 @@ package dev.cele.asa_sm;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.IntelliJTheme;
 import dev.cele.asa_sm.config.SpringApplicationContext;
+import dev.cele.asa_sm.services.SettingsService;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.services.UpdateService;
 import dev.cele.asa_sm.ui.frames.MainFrame;
@@ -32,6 +33,7 @@ public class AsaSmApplication implements CommandLineRunner {
 
     private final UpdateService updateService;
     private final SteamCMDService steamCMDService;
+    private final SettingsService settingsService;
 
     //this is needed since the beans are initialized lazily,
     // and this bean is needed for the UI to have access to the beans
@@ -49,7 +51,7 @@ public class AsaSmApplication implements CommandLineRunner {
     public void run(String... args) {
 
         FlatLaf.registerCustomDefaultsSource( "dev.cele.asa_sm.themes" );
-        IntelliJTheme.setup( AsaSmApplication.class.getResourceAsStream("/nord.theme.json") );
+        settingsService.loadTheme();
 
         new Thread(() -> {
             updateService.checkForUpdates();
