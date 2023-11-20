@@ -1,9 +1,12 @@
 package dev.cele.asa_sm.dto.ini.game_user_settings;
 
+import dev.cele.asa_sm.dto.ini.IniExtraMap;
 import dev.cele.asa_sm.dto.ini.IniSection;
 import dev.cele.asa_sm.dto.ini.IniValue;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Map;
 
 @IniSection("ServerSettings")
 @Getter @Setter
@@ -365,5 +368,8 @@ public class ServerSettings {
     private Double updateAllowedCheatersInterval = 600.0;
     @IniValue("UseExclusiveList")
     private Boolean useExclusiveList = false;
+
+    @IniExtraMap
+    Map<String, String> extraIniMap;
 
 }

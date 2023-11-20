@@ -9,6 +9,7 @@ import dev.cele.asa_sm.dto.ini.IniExtraMap;
 import dev.cele.asa_sm.dto.ini.IniSection;
 import dev.cele.asa_sm.dto.ini.IniValue;
 import dev.cele.asa_sm.services.CommandRunnerService;
+import dev.cele.asa_sm.services.IniSerializerService;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.RulesAccordion;
@@ -40,13 +41,14 @@ public class ServerTab extends JPanel {
     private final SteamCMDService steamCMDService = SpringApplicationContext.autoWire(SteamCMDService.class);
     private final CommandRunnerService commandRunnerService = SpringApplicationContext.autoWire(CommandRunnerService.class);
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
-    private final RulesAccordion rulesAccordion;
+    private final IniSerializerService iniSerializerService = SpringApplicationContext.autoWire(IniSerializerService.class);
     private Logger log = LoggerFactory.getLogger(ServerTab.class);
     //endregion
 
     //region UI components
     private final TopPanel topPanel;
     private final AdministrationAccordion administrationAccordion;
+    private final RulesAccordion rulesAccordion;
     //endregion
 
 
@@ -66,6 +68,7 @@ public class ServerTab extends JPanel {
         globalVerticalGBC.anchor = GridBagConstraints.BASELINE;
         globalVerticalGBC.gridwidth = GridBagConstraints.REMAINDER;
         globalVerticalGBC.weightx = 1.0;
+        globalVerticalGBC.insets = new Insets(5, 5, 5, 0);
 
         //create a JScrollPane and a content panel
         JPanel scrollPaneContent = new JPanel();
@@ -79,15 +82,15 @@ public class ServerTab extends JPanel {
 
         //top panel
         topPanel = new TopPanel(configDto);
-        scrollPaneContent.add(topPanel.contentPane, globalVerticalGBC);
+        scrollPaneContent.add(topPanel.$$$getRootComponent$$$(), globalVerticalGBC);
 
         //create a group named "Administration"
         administrationAccordion = new AdministrationAccordion(configDto);
-        scrollPaneContent.add(administrationAccordion.contentPane, globalVerticalGBC);
+        scrollPaneContent.add(administrationAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
 
         //... other accordion groups ...
         rulesAccordion = new RulesAccordion(configDto);
-        scrollPaneContent.add(rulesAccordion.contentPane, globalVerticalGBC);
+        scrollPaneContent.add(rulesAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
 
         //create an empty filler panel that will fill the remaining space if there's any
         JPanel fillerPanel = new JPanel();
@@ -97,7 +100,9 @@ public class ServerTab extends JPanel {
 
 
         if(detectInstalled()){
-            //if the server is installed read the ini file and populate the configDto
+            //if the server is already installed read the ini files and populate the configDto,
+            //the ini files have priority so if you create a profile for an already existing server
+            //the interface will be populated with the values from your existing server
             readAllIniFiles();
         }
 
@@ -132,81 +137,9 @@ public class ServerTab extends JPanel {
                 .resolve("GameUserSettings.ini")
                 .toFile();
 
-        readIniFile(configDto.getGameUserSettingsINI(), gameUserSettingsIniFile);
-    }
+        iniSerializerService.readIniFile(configDto.getGameUserSettingsINI(), gameUserSettingsIniFile);
 
-    @SneakyThrows
-    private void readIniFile(Object iniDtoObject, File iniFile) {
-
-        //use ini4j to read the ini file
-        Ini ini = new Ini(iniFile);
-        Map<String, Profile.Section> gameUserSettingsMap = ini.entrySet().stream()
-                .collect(toMap(it -> it.getKey(), it -> it.getValue()));
-
-        //read recognized sections from dto
-        var iniDtoClass = iniDtoObject.getClass();
-        var allFields = iniDtoClass.getDeclaredFields();
-        var sections = Arrays.stream(allFields)
-                .filter(field -> {;
-                    var hasAnnotation = field.isAnnotationPresent(IniSection.class);
-                    var classHasAnnotation = field.getType().isAnnotationPresent(IniSection.class);
-                    return hasAnnotation || classHasAnnotation;
-                })
-                .toList();
-
-        //loop over sections
-        for(Field sectionField: sections) {
-            //finding section info/dto/class
-            var sectionName = sectionField.getName();
-            if(sectionField.isAnnotationPresent(IniSection.class) && !sectionField.getAnnotation(IniSection.class).value().isEmpty()){
-                sectionName = sectionField.getAnnotation(IniSection.class).value();
-            }
-            if(sectionField.getType().isAnnotationPresent(IniSection.class) && !sectionField.getType().getAnnotation(IniSection.class).value().isEmpty()){
-                sectionName = sectionField.getType().getAnnotation(IniSection.class).value();
-            }
-
-            if(!gameUserSettingsMap.containsKey(sectionName)){
-                log.info("Section " + sectionName + " not found in ini file");
-                continue;
-            }
-
-            var sectionIniContent = gameUserSettingsMap.remove(sectionName);
-            var sectionFieldClass = sectionField.getType();
-            sectionField.setAccessible(true);
-            var sectionFieldObject = sectionField.get(iniDtoObject);
-
-
-            log.info("Reading section " + sectionName);
-
-            //reading fields inside the sectionField class
-            for(Field iniField: sectionFieldClass.getDeclaredFields()){
-                var fieldName = iniField.isAnnotationPresent(IniValue.class) ? iniField.getAnnotation(IniValue.class).value() : iniField.getName();
-                if(sectionIniContent.containsKey(fieldName)){
-                    var fieldValueToSet = sectionIniContent.get(fieldName, iniField.getType());
-                    log.info("Setting field " + fieldName + " to " + fieldValueToSet);
-                    iniField.setAccessible(true);
-                    iniField.set(sectionFieldObject, fieldValueToSet);
-                }
-            }
-        }
-        log.info("Unrecognized sections: " + gameUserSettingsMap.keySet().stream().collect(Collectors.joining(", ")));
-        var extraSectionsContainer = Arrays.stream(iniDtoClass.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(IniExtraMap.class))
-                .findFirst();
-        if(extraSectionsContainer.isPresent()){
-            Map<String, Map<String, Object>> extraSections = gameUserSettingsMap.entrySet().stream().collect(
-                    toMap(
-                            it -> it.getKey(),
-                            it -> it.getValue().entrySet().stream().collect(toMap(it2 -> it2.getKey(), it2 -> it2.getValue()))
-                    )
-            );
-
-            log.info("Found extra sections container, injecting remaining sections there");
-            var extraSectionsContainerField = extraSectionsContainer.get();
-            extraSectionsContainerField.setAccessible(true);
-            extraSectionsContainerField.set(iniDtoObject, extraSections);
-        }
-
+        //TODO: read Game.ini
     }
 
 
