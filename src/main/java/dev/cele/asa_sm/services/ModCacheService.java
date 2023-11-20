@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,11 +43,20 @@ public class ModCacheService {
                 .toList();
 
         File[] cachedModFiles = Const.MOD_CACHE_DIR.toFile().listFiles();
-        List<Integer> cachedMods = (cachedModFiles != null) ?
-                Stream.of(cachedModFiles)
-                        .map(file -> Integer.parseInt(file.getName().replaceFirst("[.][^.]+$", "")))
-                        .toList() :
-                List.of();
+        List<ModDto> cachedMods = Stream.of(cachedModFiles)
+                .map(file -> Integer.parseInt(file.getName().replaceFirst("[.][^.]+$", "")))
+                .map(id -> {
+                    try {
+                        return objectMapper.readValue(Const.MOD_CACHE_DIR.resolve(id + ".json").toFile(), ModDto.class);
+                    } catch (IOException e) {
+                        return null;
+                    }
+                })
+                .filter(mod -> mod != null)
+                .collect(Collectors.toList());
+
+        //remove mod cache older than a week
+        cachedMods.removeIf((mod) -> mod.getDateCached() == null || mod.getDateCached().plus(1, ChronoUnit.WEEKS).isBefore(LocalDate.now()));
 
         List<Integer> missingModIds = requestedMods.stream()
                 .filter(modId -> !cachedMods.contains(modId))
@@ -53,6 +65,7 @@ public class ModCacheService {
         if (!missingModIds.isEmpty()) {
             curseForgeClient.getModsByIds(missingModIds).getData().forEach(mod -> {
                 try {
+                    mod.setDateCached(LocalDate.now());
                     objectMapper.writeValue(Const.MOD_CACHE_DIR.resolve(mod.getId() + ".json").toFile(), mod);
                 } catch (IOException e) {
                     e.printStackTrace(); // Handle the exception according to your needs

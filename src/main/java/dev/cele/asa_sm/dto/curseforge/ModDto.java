@@ -1,8 +1,8 @@
 package dev.cele.asa_sm.dto.curseforge;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -34,4 +34,6 @@ public class ModDto {
     //public Integer gamePopularityRank;
     //public Boolean isAvailable;
     //public Integer thumbsUpCount;
+
+    private LocalDate dateCached;
 }
