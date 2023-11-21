@@ -7,15 +7,20 @@ import dev.cele.asa_sm.enums.MapsEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @FieldNameConstants
+@Slf4j
 public class AsaServerConfigDto {
 
     //region stuff for the unsaved variable
@@ -57,7 +62,11 @@ public class AsaServerConfigDto {
     private int rconPort = 32330;
     private int rconServerLogBuffer = 600;
 
+    @ExtraCommandLineArgument("mods")
     private String modIds = "";
+
+    @ExtraCommandLineArgument("MaxNumOfSaveBackups")
+    private Integer maxBackupQuantity = 20;
     //endregion
 
 
@@ -65,9 +74,23 @@ public class AsaServerConfigDto {
 
 
 
+    @ExtraCommandLineArgument(value = "NoBattlEye", invertBoolean = true)
     private boolean battlEye = false;
 
-    private int autoSavePeriod = 15;
+    @ExtraCommandLineArgument("newsaveformat")
+    private boolean newGameSaveFormat = false;
+
+    @ExtraCommandLineArgument("usestore")
+    private boolean useStore = false;
+
+    @ExtraCommandLineArgument("BackupTransferPlayerDatas")
+    private boolean backupTransferPlayerData = false;
+
+    @ExtraCommandLineArgument("EnableIdlePlayerKick")
+    private boolean enableIdlePlayerKick = false;
+
+    @ExtraCommandLineArgument("culture")
+    private String culture = null;
 
     @JsonIgnore
     public String[] getCommand() {
@@ -98,12 +121,34 @@ public class AsaServerConfigDto {
 
         //extra separate args
         List<String> extraArgs = new ArrayList<>();
-        if (!battlEye) {
-            extraArgs.add("-NoBattlEye");
-        }
 
-        if(!modIds.isEmpty()){
-            extraArgs.add("-mods=" + modIds);
+        var extraArgsFields = Arrays.stream(this.getClass().getDeclaredFields())
+                .filter(it -> it.isAnnotationPresent(ExtraCommandLineArgument.class))
+                .toList();
+
+        for (var field : extraArgsFields) {
+            var annotation = field.getAnnotation(ExtraCommandLineArgument.class);
+            try {
+                var argument = annotation.value().startsWith("-") ? annotation.value() : "-" + annotation.value();
+                var value = field.get(this);
+
+                // if the field is null or empty, skip it
+                if (value == null || value.toString().isEmpty()) continue;
+
+                if(value instanceof Boolean){
+                    if(annotation.invertBoolean()) {
+                        value = !(boolean) value;
+                    }
+                    if((boolean) value){
+                        extraArgs.add(argument);
+                    }
+                }else{
+                    extraArgs.add(argument + "=" + value.toString());
+                }
+
+            } catch (IllegalAccessException e) {
+                log.error("Error while getting value of field: " + field.getName(), e);
+            }
         }
 
         List<String> finalCommand = new ArrayList<>();
@@ -121,4 +166,5 @@ public class AsaServerConfigDto {
 
         return finalCommand.toArray(new String[0]);
     }
+
 }
