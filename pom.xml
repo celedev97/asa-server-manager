@@ -20,6 +20,8 @@
         <java.version>17</java.version>
         <intellij.version>232.10203.30</intellij.version>
         <aspectj.version>1.9.8</aspectj.version>
+        <!-- Manually Specified because Snakeyaml 1.33 has a vulnerability -->
+        <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
 
     <repositories>
@@ -47,13 +49,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-devtools</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -70,27 +65,23 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
 
 
+        <!-- FlatLaf for Look and Feel -->
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.2.5</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <!-- Jackson Databind (ObjectMapper) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.15.3</version>
         </dependency>
 
+        <!-- Spring Cloud OpenFeign, used for comunication with external APIs -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-dependencies</artifactId>
@@ -104,6 +95,7 @@
         </dependency>
 
 
+        <!-- IntelliJ Form, used for the LayoutManager that IntelliJ GUI Designer uses -->
         <dependency>
             <groupId>com.jetbrains.intellij.java</groupId>
             <artifactId>java-gui-forms-rt</artifactId>
@@ -134,14 +126,14 @@
             <version>3.2.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <!-- Apache Common lang cause i don't wanna reinvent the wheel -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.13.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.ini4j/ini4j -->
+        <!-- INI Serialization/Deserialization -->
         <dependency>
             <groupId>org.ini4j</groupId>
             <artifactId>ini4j</artifactId>

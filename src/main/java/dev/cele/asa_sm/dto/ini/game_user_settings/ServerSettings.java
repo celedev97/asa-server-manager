@@ -109,7 +109,7 @@ public class ServerSettings {
     @IniValue("EnablePvPGamma")
     private Boolean enablePvPGamma = false;
     @IniValue("ExtinctionEventTimeInterval")
-    private Double extinctionEventTimeInterval = 0.0;
+    private Long extinctionEventTimeInterval = 0L;
     @IniValue("FastDecayUnsnappedCoreStructures")
     private Boolean fastDecayUnsnappedCoreStructures = false;
     @IniValue("ForceAllStructureLocking")

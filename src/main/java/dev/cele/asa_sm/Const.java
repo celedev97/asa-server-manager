@@ -1,9 +1,7 @@
 package dev.cele.asa_sm;
 
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.SystemUtils;
 
-import java.io.File;
-import java.net.URI;
 import java.nio.file.Path;
 
 public final class Const {

@@ -17,6 +17,7 @@ public class SpringApplicationContext implements ApplicationContextAware {
         return context.getBean(java);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T autoWire(String qualifier) {
         return (T) context.getBean(qualifier);
     }
