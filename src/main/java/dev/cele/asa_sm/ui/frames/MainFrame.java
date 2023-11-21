@@ -9,17 +9,22 @@ import dev.cele.asa_sm.services.UpdateService;
 import dev.cele.asa_sm.ui.components.ServerTab;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class MainFrame extends JFrame {
@@ -27,6 +32,7 @@ public class MainFrame extends JFrame {
     private final JTabbedPane tabbedPane = new JTabbedPane();
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
     private final UpdateService updateService = SpringApplicationContext.autoWire(UpdateService.class);
+    private final Environment environment = SpringApplicationContext.autoWire(Environment.class);
 
     @SneakyThrows
     public MainFrame() {
@@ -223,6 +229,20 @@ public class MainFrame extends JFrame {
         var versionLabel = new JLabel("v" + updateService.getCurrentVersion());
         versionLabel.setVerticalAlignment(SwingConstants.CENTER);
         statusBar.add(versionLabel, BorderLayout.EAST);
+        var isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
+        if(isDev){
+            versionLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    var currentServerTab = (ServerTab) tabbedPane.getSelectedComponent();
+                    log.warn(
+                            String.join(" ",
+                                    currentServerTab.getConfigDto().getCommand()
+                            )
+                    );
+                }
+            });
+        }
 
         add(statusBar, BorderLayout.SOUTH);
         //endregion
