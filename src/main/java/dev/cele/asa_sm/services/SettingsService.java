@@ -59,7 +59,13 @@ public class SettingsService {
             IntelliJTheme.setup(AsaSmApplication.class.getResourceAsStream(themePath));
         }else{
             //load theme from file
-            IntelliJTheme.setup(new FileInputStream(Const.THEME_DIR.resolve(settings.getTheme()).toFile()));
+            try {
+                IntelliJTheme.setup(new FileInputStream(Const.THEME_DIR.resolve(settings.getTheme()).toFile()));
+            } catch (Exception e) {
+                log.error("Error loading theme, falling back to default theme", e);
+                settings.setTheme(new SettingsDto().getTheme());
+                save();
+            }
         }
 
         FlatLaf.updateUI();

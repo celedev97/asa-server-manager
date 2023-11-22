@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class SettingsDto {
-    private String theme = "/dev/cele/asa_sm/themes/nord.theme.json";
+    private String theme = "classpath:/dev/cele/asa_sm/themes/nord.theme.json";
 }
