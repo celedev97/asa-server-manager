@@ -63,7 +63,7 @@ public class TopPanel {
 
         openInstallLocationButton.addActionListener(e -> {
             try {
-                Desktop.getDesktop().open(Const.SERVERS_DIR.resolve(configDto.getGuid()).toFile());
+                Desktop.getDesktop().open(configDto.getServerPath().toFile());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

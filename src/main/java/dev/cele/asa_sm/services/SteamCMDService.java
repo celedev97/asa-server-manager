@@ -2,7 +2,6 @@ package dev.cele.asa_sm.services;
 
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.ui.frames.ProgressFrame;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.SystemUtils;
@@ -141,20 +140,19 @@ public class SteamCMDService {
     //region SteamCMD Commands
 
     @SneakyThrows
-    public void runDownloadVerifyServer(String guid){
-        var result = commandRunnerService.runCommand(downloadVerifyServerCommand(guid));
+    public void runDownloadVerifyServer(Path installDir){
+        var result = commandRunnerService.runCommand(downloadVerifyServerCommand(installDir));
 
         if(result.getExitCode() != 0) {
             logger.error("Error downloading server: "+result.getExitCode());
             throw new RuntimeException("Error downloading server: "+result.getExitCode());
         }
 
-        logger.info("Server downloaded to "+guid);
+        logger.info("Server downloaded to "+installDir);
     }
 
     @SneakyThrows
-    public String[] downloadVerifyServerCommand(String guid){
-        var installDir = Const.SERVERS_DIR.resolve(guid);
+    public String[] downloadVerifyServerCommand(Path installDir){
         Files.createDirectories(installDir);
         var steamCMD = "steamcmd";
         if(SystemUtils.IS_OS_WINDOWS) {

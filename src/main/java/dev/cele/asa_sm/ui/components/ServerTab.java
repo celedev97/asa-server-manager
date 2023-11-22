@@ -97,6 +97,21 @@ public class ServerTab extends JPanel {
             //the ini files have priority so if you create a profile for an already existing server
             //the interface will be populated with the values from your existing server
             readAllIniFiles();
+            if(configDto.getJustImported()){
+
+                //import extra settings from INI Files that are both on INI files and on the configDto
+                configDto.setServerPassword(configDto.getGameUserSettingsINI().getServerSettings().getServerPassword());
+                configDto.setServerAdminPassword(configDto.getGameUserSettingsINI().getServerSettings().getServerAdminPassword());
+                configDto.setServerSpectatorPassword(configDto.getGameUserSettingsINI().getServerSettings().getSpectatorPassword());
+
+                configDto.setServerName(configDto.getGameUserSettingsINI().getSessionSettings().getSessionName());
+
+                configDto.setModIds(configDto.getGameUserSettingsINI().getServerSettings().getActiveMods());
+
+                configDto.setRconEnabled(configDto.getGameUserSettingsINI().getServerSettings().getRconEnabled());
+                configDto.setRconPort(configDto.getGameUserSettingsINI().getServerSettings().getRconPort());
+                configDto.setRconServerLogBuffer(configDto.getGameUserSettingsINI().getServerSettings().getRconServerGameLogBuffer());
+            }
         }
 
 
@@ -174,10 +189,10 @@ public class ServerTab extends JPanel {
 
     private boolean detectInstalled(){
         //check if the server is installed
-        if (Files.exists(Const.SERVERS_DIR.resolve(configDto.getGuid()))) {
+        if (Files.exists(configDto.getServerPath())) {
             topPanel.installVerifyButton.setText("Verify/Update");
             topPanel.openInstallLocationButton.setEnabled(true);
-            topPanel.installedLocationLabel.setText(Const.SERVERS_DIR.resolve(configDto.getGuid()).toString());
+            topPanel.installedLocationLabel.setText(configDto.getServerPath().toString());
             topPanel.startButton.setEnabled(true);
             return true;
         } else {
@@ -194,7 +209,7 @@ public class ServerTab extends JPanel {
         ProcessDialog processDialog = new ProcessDialog(
                 (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this),
                 wasInstalled ? "Verifying/Updating server..." : "Installing server...",
-                steamCMDService.downloadVerifyServerCommand(configDto.getGuid()),
+                steamCMDService.downloadVerifyServerCommand(configDto.getServerPath()),
                 result -> {
                     if(!wasInstalled){
                         configDto.setUnsaved(true);
@@ -230,6 +245,25 @@ public class ServerTab extends JPanel {
             serverThread.interrupt();
             topPanel.startButton.setText("Start");
             return;
+        }
+
+        if(getConfigDto().getJustImported()){
+            var result = JOptionPane.showConfirmDialog(this, """
+            You have just imported this server, starting it with wrong settings may damage data
+            (for example check mods ids and similar stuff)
+            Are you sure you checked all and you want to start it?"""
+                    , "Warning",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if(result != JOptionPane.OK_OPTION){
+                configDto.setJustImported(false);
+                save();
+            }else {
+                configDto.setJustImported(false);
+                return;
+            }
         }
 
         //start the server

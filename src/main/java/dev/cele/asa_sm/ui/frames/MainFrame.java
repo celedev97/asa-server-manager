@@ -174,6 +174,29 @@ public class MainFrame extends JFrame {
 
         fileMenu.addSeparator();
 
+        var importExistingServerMenuItem = new JMenuItem("Import Existing Server");
+        importExistingServerMenuItem.setMnemonic('I');
+
+        var directoryChooser = new JFileChooser();
+        directoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        directoryChooser.setDialogTitle("Select server directory");
+
+        importExistingServerMenuItem.addActionListener(e -> {
+            //open a directory chooser
+            var result = directoryChooser.showOpenDialog(this);
+            if(result == JFileChooser.APPROVE_OPTION) {
+                var selectedDirectory = directoryChooser.getSelectedFile().toPath();
+                var configDto = new AsaServerConfigDto();
+                configDto.setCustomInstallPath(selectedDirectory.toAbsolutePath().toString());
+                configDto.setJustImported(true);
+                configDto.setProfileName("Imported Server");
+                addProfile(configDto);
+            }
+        });
+        fileMenu.add(importExistingServerMenuItem);
+
+        fileMenu.addSeparator();
+
         var exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.setMnemonic('x');
         exitMenuItem.addActionListener(e -> System.exit(0));

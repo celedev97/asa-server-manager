@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -178,9 +179,9 @@ public class AsaServerConfigDto {
         //name and password
         if (!serverName.isEmpty()) mainArgs.add("SessionName=" + serverName);
 
-        if (!serverPassword.isEmpty()) mainArgs.add("ServerPassword=" + serverPassword);
-        if (!serverAdminPassword.isEmpty()) mainArgs.add("ServerAdminPassword=" + serverAdminPassword);
-        if (!serverSpectatorPassword.isEmpty()) mainArgs.add("SpectatorPassword=" + serverSpectatorPassword);
+        if (!StringUtils.isEmpty(serverPassword)) mainArgs.add("ServerPassword=" + serverPassword);
+        if (!StringUtils.isEmpty(serverAdminPassword)) mainArgs.add("ServerAdminPassword=" + serverAdminPassword);
+        if (!StringUtils.isEmpty(serverSpectatorPassword)) mainArgs.add("SpectatorPassword=" + serverSpectatorPassword);
 
         //networking
         if (serverPort != 0) mainArgs.add("Port=" + serverPort);
