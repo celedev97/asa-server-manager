@@ -64,14 +64,17 @@ public class IniSerializerService {
             sectionField.setAccessible(true);
             var sectionFieldObject = sectionField.get(iniDtoObject);
 
-
+            var validFields = Arrays.stream(sectionFieldClass.getDeclaredFields()).filter(
+                    field -> field.isAnnotationPresent(IniValue.class) && !field.isAnnotationPresent(IniExtraMap.class)
+            ).toList();
 
             //reading fields inside the sectionField class
             var readFields = new ArrayList<String>();
-            for(Field iniField: sectionFieldClass.getDeclaredFields()){
+            for(Field iniField: validFields){
                 var fieldName = iniField.isAnnotationPresent(IniValue.class) ? iniField.getAnnotation(IniValue.class).value() : iniField.getName();
                 readFields.add(fieldName);
                 if(sectionIniContent.containsKey(fieldName)){
+                    log.info("rd: " + fieldName);
                     var fieldValueToSet = sectionIniContent.get(fieldName, iniField.getType());
                     log.info(fieldName + " <= " + fieldValueToSet);
                     iniField.setAccessible(true);
@@ -159,8 +162,12 @@ public class IniSerializerService {
 
             log.debug("Writing section " + sectionName);
 
+            var validFields = Arrays.stream(sectionFieldClass.getDeclaredFields()).filter(
+                    field -> field.isAnnotationPresent(IniValue.class) && !field.isAnnotationPresent(IniExtraMap.class)
+            ).toList();
+
             //writing fields inside the sectionField class
-            for (Field iniField : sectionFieldClass.getDeclaredFields()) {
+            for (Field iniField : validFields) {
                 var fieldName = iniField.isAnnotationPresent(IniValue.class) ? iniField.getAnnotation(IniValue.class).value() : iniField.getName();
                 iniField.setAccessible(true);
                 var fieldValue = iniField.get(sectionFieldObject);
