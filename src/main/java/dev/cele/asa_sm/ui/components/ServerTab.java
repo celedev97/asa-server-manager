@@ -128,8 +128,7 @@ public class ServerTab extends JPanel {
     }
 
     private void readAllIniFiles(){
-        var gameUserSettingsIniFile = Const.SERVERS_DIR
-                .resolve(configDto.getGuid())
+        var gameUserSettingsIniFile = configDto.getServerPath()
                 .resolve("ShooterGame")
                 .resolve("Saved")
                 .resolve("Config")
@@ -140,6 +139,18 @@ public class ServerTab extends JPanel {
         iniSerializerService.readIniFile(configDto.getGameUserSettingsINI(), gameUserSettingsIniFile);
 
         //TODO: read Game.ini
+    }
+
+    private void writeAllIniFiles(){
+        var gameUserSettingsIniFile = configDto.getServerPath()
+                .resolve("ShooterGame")
+                .resolve("Saved")
+                .resolve("Config")
+                .resolve("WindowsServer")
+                .resolve("GameUserSettings.ini")
+                .toFile();
+
+        iniSerializerService.writeIniFile(configDto.getGameUserSettingsINI(), gameUserSettingsIniFile);
     }
 
 
@@ -188,8 +199,10 @@ public class ServerTab extends JPanel {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(configFile.toFile(), configDto);
             log.info("Saved configDto to " + configFile.toString() + " file");
             configDto.setUnsaved(false);
+            writeAllIniFiles();
         } catch (Exception e) {
             log.error("Error saving configDto to file", e);
+            JOptionPane.showMessageDialog(this, "Error saving configDto to file", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

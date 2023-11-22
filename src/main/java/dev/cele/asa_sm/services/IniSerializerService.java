@@ -79,29 +79,30 @@ public class IniSerializerService {
                 }
             }
 
-            //read extra fields
-            var extraFields = sectionIniContent.entrySet().stream()
+            //read extra fields from the section
+            var extraFieldsFromIni = sectionIniContent.entrySet().stream()
                     .filter(it -> !readFields.contains(it.getKey()))
                     .collect(Collectors.toMap(it -> it.getKey(), it -> it.getValue()));
 
-            var extraFieldsContainer = Arrays.stream(iniDtoClass.getDeclaredFields())
+            var extraFieldsContainer = Arrays.stream(sectionFieldClass.getDeclaredFields())
                     .filter(field -> field.isAnnotationPresent(IniExtraMap.class))
                     .findFirst();
 
-            if(!extraFields.isEmpty() && extraFieldsContainer.isPresent()){
+            if(!extraFieldsFromIni.isEmpty() && extraFieldsContainer.isPresent()){
                 log.debug("Found extra fields container, injecting remaining fields there");
 
                 var extraFieldsContainerField = extraFieldsContainer.get();
                 extraFieldsContainerField.setAccessible(true);
-                var extraFieldsMap = (Map<String, String>) extraFieldsContainerField.get(iniDtoObject);
+                var extraFieldsMap = (Map<String, String>) extraFieldsContainerField.get(sectionFieldObject);
                 if(extraFieldsMap == null){
-                    extraFieldsMap = extraFields;
+                    extraFieldsMap = extraFieldsFromIni;
                 }else{
-                    extraFieldsMap.putAll(extraFields);
+                    extraFieldsMap.putAll(extraFieldsFromIni);
                 }
-                extraFieldsContainerField.set(iniDtoObject, extraFieldsMap);
+                extraFieldsContainerField.set(sectionFieldObject, extraFieldsMap);
             }
         }
+
         log.debug("== UNRECOGNIZED SECTIONS == ");
         for(var unrecognizedSection: gameUserSettingsMap.entrySet()){
             log.debug(unrecognizedSection.getKey());
@@ -127,7 +128,7 @@ public class IniSerializerService {
 
 
     @SneakyThrows
-    private void writeIniFile(Object iniDtoObject, File iniFile) {
+    public void writeIniFile(Object iniDtoObject, File iniFile) {
         Ini ini = new Ini();
 
         //read recognized sections from dto
@@ -158,7 +159,7 @@ public class IniSerializerService {
 
             log.debug("Writing section " + sectionName);
 
-            //reading fields inside the sectionField class
+            //writing fields inside the sectionField class
             for (Field iniField : sectionFieldClass.getDeclaredFields()) {
                 var fieldName = iniField.isAnnotationPresent(IniValue.class) ? iniField.getAnnotation(IniValue.class).value() : iniField.getName();
                 iniField.setAccessible(true);
@@ -168,6 +169,26 @@ public class IniSerializerService {
                     ini.put(sectionName, fieldName, fieldValue);
                 }
             }
+
+            //write extra fields
+            var extraFieldsContainer = Arrays.stream(sectionFieldClass.getDeclaredFields())
+                    .filter(field -> field.isAnnotationPresent(IniExtraMap.class))
+                    .findFirst();
+
+            if(extraFieldsContainer.isPresent()){
+                log.debug("Found extra fields container, injecting remaining fields there");
+
+                var extraFieldsContainerField = extraFieldsContainer.get();
+                extraFieldsContainerField.setAccessible(true);
+                var extraFieldsMap = (Map<String, String>) extraFieldsContainerField.get(sectionFieldObject);
+                if(extraFieldsMap != null){
+                    for(var extraField: extraFieldsMap.entrySet()){
+                        log.debug("Setting field " + extraField.getKey() + " to " + extraField.getValue());
+                        ini.put(sectionName, extraField.getKey(), extraField.getValue());
+                    }
+                }
+            }
+
         }
         //write extra sections
         var extraSectionsContainer = Arrays.stream(iniDtoClass.getDeclaredFields())
@@ -187,6 +208,8 @@ public class IniSerializerService {
                 }
             }
         }
+
+        ini.store(iniFile);
     }
 
 }

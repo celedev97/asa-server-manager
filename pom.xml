@@ -20,6 +20,7 @@
         <java.version>17</java.version>
         <intellij.version>232.10203.30</intellij.version>
         <aspectj.version>1.9.8</aspectj.version>
+        <flatlaf.version>3.2.5</flatlaf.version>
         <!-- Manually Specified because Snakeyaml 1.33 has a vulnerability -->
         <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
@@ -71,8 +72,14 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.2.5</version>
+            <version>${flatlaf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-extras</artifactId>
+            <version>${flatlaf.version}</version>
+        </dependency>
+
 
         <!-- Jackson Databind (ObjectMapper) -->
         <dependency>

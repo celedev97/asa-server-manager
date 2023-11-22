@@ -107,7 +107,7 @@ public class MainFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "Server is running, please stop it first", "Server is running", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if(tabComponent.getConfigDto().isUnsaved()){
+            if(tabComponent.getConfigDto().getUnsaved()){
                 int result = JOptionPane.showConfirmDialog(this, "You have unsaved changes, do you want to save them?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION);
                 if(result == JOptionPane.YES_OPTION){
                     tabComponent.save();

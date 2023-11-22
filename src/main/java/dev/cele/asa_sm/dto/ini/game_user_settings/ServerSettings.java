@@ -219,7 +219,7 @@ public class ServerSettings {
     @IniValue("ServerAdminPassword")
     private String serverAdminPassword = null;
     @IniValue("ServerAutoForceRespawnWildDinosInterval")
-    private Double serverAutoForceRespawnWildDinosInterval = 0.0;
+    private Float serverAutoForceRespawnWildDinosInterval = 0f;
     @IniValue("ServerCrosshair")
     private Boolean serverCrosshair = true;
     @IniValue("ServerForceNoHUD")

@@ -9,13 +9,9 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.constraints.Min;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -23,10 +19,24 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AsaServerConfigDto {
 
+    //region stuff for management of profiles
+    private Boolean justImported = false;
+    private String customInstallPath = null;
+
+    public Path getServerPath(){
+        if(customInstallPath != null){
+            return Path.of(customInstallPath);
+        }else{
+            return Const.SERVERS_DIR.resolve(guid);
+        }
+    }
+
+    //endregion
+
     //region stuff for the unsaved variable
     @JsonIgnore
-    private boolean unsaved = false;
-    public void setUnsaved(boolean value){
+    private Boolean unsaved = false;
+    public void setUnsaved(Boolean value){
         unsaved = value;
         unsavedChangeListeners.forEach(listener -> listener.accept(value));
     }
@@ -58,14 +68,14 @@ public class AsaServerConfigDto {
     private int serverQueryPort = 27015;
     private int serverMaxPlayers = 70;
 
-    private boolean rconEnabled = false;
+    private Boolean rconEnabled = false;
     private int rconPort = 32330;
     private int rconServerLogBuffer = 600;
 
     @ExtraCommandLineArgument("mods")
     private String modIds = "";
 
-    @ExtraCommandLineArgument("MaxNumOfSaveBackups")
+    @ExtraCommandLineArgument("MaxNumOfSaveBackups") @IgnoreIfEqual(type = Integer.class, value = "20")
     private Integer maxBackupQuantity = 20;
     //endregion
 
@@ -75,22 +85,88 @@ public class AsaServerConfigDto {
 
 
     @ExtraCommandLineArgument(value = "NoBattlEye", invertBoolean = true)
-    private boolean battlEye = false;
+    private Boolean battlEye = false;
 
     @ExtraCommandLineArgument("newsaveformat")
-    private boolean newGameSaveFormat = false;
+    private Boolean newGameSaveFormat = false;
 
     @ExtraCommandLineArgument("usestore")
-    private boolean useStore = false;
+    private Boolean useStore = false;
 
     @ExtraCommandLineArgument("BackupTransferPlayerDatas")
-    private boolean backupTransferPlayerData = false;
+    private Boolean backupTransferPlayerData = false;
 
     @ExtraCommandLineArgument("EnableIdlePlayerKick")
-    private boolean enableIdlePlayerKick = false;
+    private Boolean enableIdlePlayerKick = false;
 
     @ExtraCommandLineArgument("culture")
     private String culture = null;
+
+    @ExtraCommandLineArgument(value = "insecure")
+    private Boolean vacDisabled = false;
+
+    @ExtraCommandLineArgument("noantispeedhack")
+    private Boolean antiSpeedHackDisabled = false;
+
+    @ExtraCommandLineArgument("speedhackbias") @IgnoreIfEqual(type = Double.class, value = "1.0")
+    private Double speedHackBias = 1.0;
+
+    @ExtraCommandLineArgument("nocombineclientmoves")
+    private Boolean disablePlayerMovePhysicsOptimization = false;
+
+    @ExtraCommandLineArgument("servergamelog")
+    private Boolean serverGameLog = false;
+
+    @ExtraCommandLineArgument("NoHangDetection")
+    private Boolean disableHangDetection = false;
+
+    @ExtraCommandLineArgument("nodinos")
+    private Boolean disableDinos = false;
+
+    @ExtraCommandLineArgument("noundermeshchecking")
+    private Boolean noUnderMeshChecking = false;
+
+    @ExtraCommandLineArgument("noundermeshkilling")
+    private Boolean noUnderMeshKilling = false;
+
+    @ExtraCommandLineArgument("AllowSharedConnections")
+    private Boolean allowSharedConnections = false;
+
+    @ExtraCommandLineArgument("SecureSendArKPayload")
+    private Boolean creatureUploadIssueProtection = false;
+
+    @ExtraCommandLineArgument("UseSecureSpawnRules")
+    private Boolean secureItemDinoSpawnRules = false;
+
+    @ExtraCommandLineArgument("UseItemDupeCheck")
+    private Boolean additionalDupeProtection = false;
+
+    @ExtraCommandLineArgument("ForceRespawnDinos")
+    private Boolean forceRespawnDinos = false;
+
+    @ExtraCommandLineArgument("StasisKeepControllers")
+    private Boolean stasisKeepControllers = false;
+
+    @ExtraCommandLineArgument("structurememopts")
+    private Boolean structureMemoryOptimizations = false;
+
+    @ExtraCommandLineArgument("UseStructureStasisGrid")
+    private Boolean useStructureStasisGrid = false;
+
+    @ExtraCommandLineArgument("servergamelogincludetribelogs")
+    private Boolean serverGameLogIncludeTribeLogs = false;
+
+    @ExtraCommandLineArgument("ServerRCONOutputTribeLogs")
+    private Boolean serverRCONOutputTribeLogs = false;
+
+    @ExtraCommandLineArgument("AdminLogging")
+    private Boolean adminLogsToPublicChat = false;
+
+    @ExtraCommandLineArgument("NotifyAdminCommandsInChat")
+    private Boolean adminLogsToAdminChat = false;
+
+
+    private String additionalServerArgs = "";
 
     @JsonIgnore
     public String[] getCommand() {
@@ -132,14 +208,27 @@ public class AsaServerConfigDto {
                 var argument = annotation.value().startsWith("-") ? annotation.value() : "-" + annotation.value();
                 var value = field.get(this);
 
+                //check if there's an ignoreIf annotation
+                var ignoreIf = field.getAnnotation(IgnoreIfEqual.class);
+                if(ignoreIf != null){
+                    var ignoreIfValue = ignoreIf.value();
+                    var realValue = field.get(this);
+
+                    var ignore = false;
+
+                    ignore = Objects.equals(ignoreIfValue, realValue.toString());
+
+                    if(ignore) continue;
+                }
+
                 // if the field is null or empty, skip it
                 if (value == null || value.toString().isEmpty()) continue;
 
                 if(value instanceof Boolean){
                     if(annotation.invertBoolean()) {
-                        value = !(boolean) value;
+                        value = !(Boolean) value;
                     }
-                    if((boolean) value){
+                    if((Boolean) value){
                         extraArgs.add(argument);
                     }
                 }else{
@@ -153,13 +242,10 @@ public class AsaServerConfigDto {
 
         List<String> finalCommand = new ArrayList<>();
         finalCommand.add(
-                Const.SERVERS_DIR
-                        .resolve(guid)
-                        .resolve("ShooterGame")
-                        .resolve("Binaries")
-                        .resolve("Win64")
-                        .resolve("ArkAscendedServer.exe")
-                        .toAbsolutePath().toString()
+                getServerPath()
+                        .resolve("ShooterGame/Binaries/Win64/ArkAscendedServer.exe")
+                        .toAbsolutePath()
+                        .toString()
         );
         finalCommand.add(String.join("?", mainArgs));
         finalCommand.addAll(extraArgs);
