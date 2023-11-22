@@ -1,13 +1,11 @@
 package dev.cele.asa_sm.ui.components.forms;
 
-import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
+import com.formdev.flatlaf.FlatClientProperties;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class NumberField extends JTextField {
@@ -22,14 +20,20 @@ public class NumberField extends JTextField {
     public void setIsInteger(boolean isInteger){
         this.isInteger = isInteger;
         if(isInteger){
-            this.number = number.intValue();
+            setNumber(number.intValue());
         }
-        validateTextAndUpdate(getText());
     }
 
     public void setNumber(Number number){
-        this.number = number;
-        setText(number.toString());
+        if(!Objects.equals(number, this.number)){
+            numberListeners.forEach(listener -> listener.accept(number));
+            this.number = number;
+            updateText();
+        }
+    }
+
+    private void updateText(){
+        setText("" + (isInteger ? number.intValue() : number));
     }
 
     public NumberField() {
@@ -42,20 +46,39 @@ public class NumberField extends JTextField {
         //add focus lost listener
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                validateTextAndUpdate(getText());
+                validateTextAndUpdateNumber();
             }
         });
+
+        //add listener for ENTER key
+        addActionListener(e -> validateTextAndUpdateNumber());
     }
 
-    private void validateTextAndUpdate(String text){
+    public void validateTextAndUpdateNumber(){
+        var text = getText();
         try {
             number = isInteger ? Integer.parseInt(text) : Double.parseDouble(text);
             numberListeners.forEach(listener -> listener.accept(number));
         } catch (NumberFormatException e) {
             //TODO: make a beep?
+            putClientProperty(FlatClientProperties.OUTLINE, "warning");
+            if(threadCancelWarning != null){
+                threadCancelWarning.interrupt();
+            }
+            threadCancelWarning = new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException interruptedException) {
+                    return;
+                }
+                putClientProperty(FlatClientProperties.OUTLINE, null);
+            });
+            threadCancelWarning.start();
             setText(number.toString());
         }
     }
+
+    Thread threadCancelWarning = null;
 
     public void addNumberListener(Consumer<Number> listener){
         numberListeners.add(listener);

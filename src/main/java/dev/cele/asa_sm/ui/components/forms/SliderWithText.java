@@ -35,12 +35,13 @@ public class SliderWithText extends JPanel {
 
     public void setValue(Number value) {
         this.value = value;
+        numberField.setNumber(value);
         updateSlider();
     }
 
     public void setStep(Number step) {
         this.step = step;
-        if(step.intValue() != step.doubleValue()){
+        if((double)step.intValue() != step.doubleValue()){
             numberField.setIsInteger(false);
         }
         updateSlider();
