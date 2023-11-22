@@ -5,33 +5,26 @@ import com.formdev.flatlaf.FlatClientProperties;
 import dev.cele.asa_sm.Const;
 import dev.cele.asa_sm.config.SpringApplicationContext;
 import dev.cele.asa_sm.dto.AsaServerConfigDto;
-import dev.cele.asa_sm.dto.ini.IniExtraMap;
-import dev.cele.asa_sm.dto.ini.IniSection;
-import dev.cele.asa_sm.dto.ini.IniValue;
 import dev.cele.asa_sm.services.CommandRunnerService;
 import dev.cele.asa_sm.services.IniSerializerService;
 import dev.cele.asa_sm.services.SteamCMDService;
+import dev.cele.asa_sm.ui.components.forms.SliderWithText;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.RulesAccordion;
 import dev.cele.asa_sm.ui.components.server_tab_accordions.TopPanel;
 import dev.cele.asa_sm.ui.frames.ProcessDialog;
+import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 import lombok.Getter;
-import lombok.SneakyThrows;
-import org.ini4j.Ini;
-import org.ini4j.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -125,6 +118,31 @@ public class ServerTab extends JPanel {
             }
         });
 
+        SwingUtilities.invokeLater(() -> {
+            setupListenersForUnsaved(this);
+        });
+    }
+
+    void setupListenersForUnsaved(Container container){
+        //loop over all the children of the container
+        for (Component component : container.getComponents()) {
+            //if the component is a container, call this function recursively
+
+            if(component instanceof SliderWithText){
+                ((SliderWithText) component).addChangeListener(e -> configDto.setUnsaved(true));
+            } else if (component instanceof JTextComponent){
+                ((JTextComponent) component).getDocument().addDocumentListener(new SimpleDocumentListener(text -> configDto.setUnsaved(true)));
+            } else if (component instanceof JCheckBox){
+                ((JCheckBox) component).addActionListener(e -> configDto.setUnsaved(true));
+            } else if (component instanceof JComboBox){
+                ((JComboBox<?>) component).addActionListener(e -> configDto.setUnsaved(true));
+            } else if (component instanceof JSpinner){
+                ((JSpinner) component).addChangeListener(e -> configDto.setUnsaved(true));
+            }else if(component instanceof Container){
+                setupListenersForUnsaved((Container) component);
+            }
+
+        }
     }
 
     private void readAllIniFiles(){

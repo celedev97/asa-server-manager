@@ -114,19 +114,6 @@
             <version>${intellij.version}</version>
         </dependency>
 
-        <!-- Aspectj AOP -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <scope>compile</scope>
-            <version>${aspectj.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>${aspectj.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
@@ -193,49 +180,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>dev.aspectj</groupId>
-                <artifactId>aspectj-maven-plugin</artifactId>
-                <version>1.13.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjtools</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <verbose>true</verbose>
-                    <showWeaveInfo>true</showWeaveInfo>
-                    <forceAjcCompile>true</forceAjcCompile>
-
-                    <source>17</source>
-                    <target>17</target>
-                    <complianceLevel>17</complianceLevel>
-
-                    <outxml>true</outxml>
-                    <forceAjcCompile>true</forceAjcCompile>
-
-                    <sources/>
-                    <weaveDirectories>
-                        <weaveDirectory>${project.build.outputDirectory}</weaveDirectory>
-                    </weaveDirectories>
-                </configuration>
             </plugin>
 
         </plugins>
