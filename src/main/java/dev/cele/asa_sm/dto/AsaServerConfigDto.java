@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 public class AsaServerConfigDto {
 
     //region stuff for management of profiles
+    @JsonIgnore
     private Boolean justImported = false;
     private String customInstallPath = null;
 

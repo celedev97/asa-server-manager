@@ -22,7 +22,7 @@ public class TopPanel {
     private JTextField profileNameField;
     public JButton saveButton;
     public JButton openInstallLocationButton;
-    private JLabel installedVersionLabel;
+    public JLabel installedVersionLabel;
 
     public JButton startButton;
     private JButton rconButton;

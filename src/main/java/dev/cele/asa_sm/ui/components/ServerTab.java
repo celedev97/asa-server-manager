@@ -19,9 +19,12 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import static java.util.stream.Collectors.toMap;
@@ -197,6 +200,9 @@ public class ServerTab extends JPanel {
             topPanel.openInstallLocationButton.setEnabled(true);
             topPanel.installedLocationLabel.setText(configDto.getServerPath().toString());
             topPanel.startButton.setEnabled(true);
+
+            readVersionNumber();
+
             return true;
         } else {
             topPanel.installVerifyButton.setText("Install");
@@ -204,6 +210,42 @@ public class ServerTab extends JPanel {
             topPanel.installedLocationLabel.setText("Not installed yet");
             topPanel.startButton.setEnabled(false);
             return false;
+        }
+    }
+
+    private void readVersionNumber() {
+        try {
+            //read version from log file (ShooterGame\Saved\Logs\ShooterGame.log)
+            var logFile = configDto.getServerPath()
+                    .resolve("ShooterGame")
+                    .resolve("Saved")
+                    .resolve("Logs")
+                    .resolve("ShooterGame.log")
+                    .toFile();
+
+            //read file line by line, not all at once, because the file can be huge
+            var bufferedReader = new BufferedReader(new FileReader(logFile));
+            String line;
+
+            var ARK_LOG_VERSION_DIVIDER = "ARK Version: ";
+
+            while((line = bufferedReader.readLine()) != null){
+                if(line.contains(ARK_LOG_VERSION_DIVIDER)){
+                    var versionParts = line.split(ARK_LOG_VERSION_DIVIDER);
+                    var version = "?";
+                    if(versionParts.length == 2){
+                        version = versionParts[1];
+                    }
+
+                    log.info("Detected version: " + version);
+
+                    topPanel.installedVersionLabel.setText(version);
+                    break;
+                }
+            }
+            bufferedReader.close();
+        }catch (Exception e){
+            log.error("Error reading version from log file", e);
         }
     }
 
@@ -273,6 +315,17 @@ public class ServerTab extends JPanel {
                     topPanel.startButton.setText("Start")
             );
         });
+
+        //update the version number
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                SwingUtilities.invokeLater(() -> readVersionNumber());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
         serverThread.start();
         topPanel.startButton.setText("Stop");
     }

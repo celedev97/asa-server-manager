@@ -189,6 +189,7 @@ public class MainFrame extends JFrame {
                 var configDto = new AsaServerConfigDto();
                 configDto.setCustomInstallPath(selectedDirectory.toAbsolutePath().toString());
                 configDto.setJustImported(true);
+                configDto.setUnsaved(true);
                 configDto.setProfileName("Imported Server");
                 addProfile(configDto);
             }
