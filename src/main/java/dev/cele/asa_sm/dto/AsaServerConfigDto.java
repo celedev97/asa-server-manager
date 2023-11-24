@@ -67,6 +67,7 @@ public class AsaServerConfigDto {
 
     private int serverPort = 7777;
     private int serverQueryPort = 27015;
+    @ExtraCommandLineArgument("WinLiveMaxPlayers") @IgnoreIfEqual(type = Integer.class, value = "70")
     private int serverMaxPlayers = 70;
 
     private Boolean rconEnabled = false;
@@ -186,7 +187,6 @@ public class AsaServerConfigDto {
         //networking
         if (serverPort != 0) mainArgs.add("Port=" + serverPort);
         if (serverQueryPort != 0) mainArgs.add("QueryPort=" + serverQueryPort);
-        if (serverMaxPlayers != 0) mainArgs.add("MaxPlayers=" + serverMaxPlayers);
 
         //TODO: move RCON config to the ini file?
         if (rconEnabled) {

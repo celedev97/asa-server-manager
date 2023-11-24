@@ -233,7 +233,7 @@ public class ServerTab extends JPanel {
         Path configFile = Path.of("data" + File.separator + "profiles" + File.separator + configDto.getGuid() + ".json");
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(configFile.toFile(), configDto);
-            log.info("Saved configDto to " + configFile.toString() + " file");
+            log.info("Saved configDto to " + configFile + " file");
             configDto.setUnsaved(false);
             writeAllIniFiles();
         } catch (Exception e) {
