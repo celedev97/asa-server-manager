@@ -1,13 +1,19 @@
 # ASA Server Manager
 
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/celedev97/asa-server-manager?link=https%3A%2F%2Fgithub.com%2Fceledev97%2Fasa-server-manager%2Freleases%2Flatest)
-![Discord](https://img.shields.io/discord/1171535753063432232?logo=discord&logoColor=white)
+[<img alt="Discord Link" src="https://img.shields.io/discord/1171535753063432232?logo=discord&logoColor=white" />](https://discord.gg/HYDsbds98E)
 
 ASA Server Manager is a program for installing and managing self-hosted servers for the Ark Survival Ascended game.
 
 The program aim to be as similar as possible to the old ARK Server Manager for Ark Survival Evolved.
 
 ### This program is currently under development and is not yet complete!
+
+## Discord
+
+Join our discord for reporting bugs, getting help, and getting updates on release status and next milestones.
+
+[Join Discord](https://discord.gg/HYDsbds98E)
 
 ## Installation
 
