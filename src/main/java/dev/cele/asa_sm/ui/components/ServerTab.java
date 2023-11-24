@@ -260,12 +260,9 @@ public class ServerTab extends JPanel {
                     JOptionPane.WARNING_MESSAGE
             );
 
-            if(result != JOptionPane.OK_OPTION){
-                configDto.setJustImported(false);
+            configDto.setJustImported(false);
+            if(result != JOptionPane.YES_OPTION){
                 save();
-            }else {
-                configDto.setJustImported(false);
-                return;
             }
         }
 

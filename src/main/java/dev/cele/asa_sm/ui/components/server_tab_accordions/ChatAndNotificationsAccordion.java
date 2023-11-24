@@ -89,7 +89,7 @@ public class ChatAndNotificationsAccordion {
         panel1.add(enablePlayerJoinedNotificationsCheckBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final AccordionTopBar accordionTopBar1 = new AccordionTopBar();
         accordionTopBar1.setExpanded(true);
-        accordionTopBar1.setTitle("HUD And Visuals");
+        accordionTopBar1.setTitle("Chat and Notifications");
         contentPane.add(accordionTopBar1, BorderLayout.NORTH);
     }
 
