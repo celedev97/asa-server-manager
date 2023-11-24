@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="dev.cele.asa_sm.ui.components.server_tab_accordions.HUDAndVisuals">
+  <grid id="27dc6" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="658" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="2f6ca" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="4dfb" class="javax.swing.JCheckBox" binding="allowCrosshairCheckBox" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Crosshair"/>
+            </properties>
+          </component>
+          <component id="5ac75" class="javax.swing.JCheckBox" binding="allowThirdPersonViewCheckBox" default-binding="true">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Third-Person View"/>
+            </properties>
+          </component>
+          <component id="e4c7f" class="javax.swing.JCheckBox" binding="allowPlayerGammaSettingsPvPCheckBox">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Player Gamma Settings in PvP"/>
+            </properties>
+          </component>
+          <component id="a9206" class="javax.swing.JCheckBox" binding="allowHUDCheckBox" default-binding="true">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow HUD"/>
+            </properties>
+          </component>
+          <component id="10246" class="javax.swing.JCheckBox" binding="showFloatingDamageTextCheckBox" default-binding="true">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Show Floating Damage Text"/>
+            </properties>
+          </component>
+          <component id="56a65" class="javax.swing.JCheckBox" binding="allowPlayerGammaSettingsPvECheckBox">
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Player Gamma Settings in PvE"/>
+            </properties>
+          </component>
+          <component id="e42dd" class="javax.swing.JCheckBox" binding="allowMapPlayerLocationCheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Map Player Location"/>
+            </properties>
+          </component>
+          <component id="5d134" class="javax.swing.JCheckBox" binding="allowHitMarkersCheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Allow Hit Markers"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="8ee07" class="dev.cele.asa_sm.ui.components.AccordionTopBar">
+        <constraints border-constraint="North"/>
+        <properties>
+          <expanded value="true"/>
+          <title value="HUD And Visuals"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

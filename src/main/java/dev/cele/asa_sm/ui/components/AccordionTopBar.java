@@ -1,8 +1,6 @@
 package dev.cele.asa_sm.ui.components;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.ui.FlatBorder;
-import com.formdev.flatlaf.ui.FlatRoundBorder;
 import lombok.Getter;
 
 import javax.swing.*;

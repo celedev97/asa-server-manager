@@ -9,9 +9,7 @@ import dev.cele.asa_sm.services.CommandRunnerService;
 import dev.cele.asa_sm.services.IniSerializerService;
 import dev.cele.asa_sm.services.SteamCMDService;
 import dev.cele.asa_sm.ui.components.forms.SliderWithText;
-import dev.cele.asa_sm.ui.components.server_tab_accordions.AdministrationAccordion;
-import dev.cele.asa_sm.ui.components.server_tab_accordions.RulesAccordion;
-import dev.cele.asa_sm.ui.components.server_tab_accordions.TopPanel;
+import dev.cele.asa_sm.ui.components.server_tab_accordions.*;
 import dev.cele.asa_sm.ui.frames.ProcessDialog;
 import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 import lombok.Getter;
@@ -40,8 +38,7 @@ public class ServerTab extends JPanel {
 
     //region UI components
     private final TopPanel topPanel;
-    private final AdministrationAccordion administrationAccordion;
-    private final RulesAccordion rulesAccordion;
+
     //endregion
 
 
@@ -78,12 +75,18 @@ public class ServerTab extends JPanel {
         scrollPaneContent.add(topPanel.$$$getRootComponent$$$(), globalVerticalGBC);
 
         //create a group named "Administration"
-        administrationAccordion = new AdministrationAccordion(configDto);
+        var administrationAccordion = new AdministrationAccordion(configDto);
         scrollPaneContent.add(administrationAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
 
         //... other accordion groups ...
-        rulesAccordion = new RulesAccordion(configDto);
+        var rulesAccordion = new RulesAccordion(configDto);
         scrollPaneContent.add(rulesAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
+
+        var chatAndNotificationsAccordion = new ChatAndNotificationsAccordion(configDto);
+        scrollPaneContent.add(chatAndNotificationsAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
+
+        var hudAndVisualsAccordion = new HUDAndVisuals(configDto);
+        scrollPaneContent.add(hudAndVisualsAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
 
         //create an empty filler panel that will fill the remaining space if there's any
         JPanel fillerPanel = new JPanel();
