@@ -89,15 +89,6 @@ public class AsaServerConfigDto {
     @ExtraCommandLineArgument(value = "NoBattlEye", invertBoolean = true)
     private Boolean battlEye = false;
 
-    @ExtraCommandLineArgument("newsaveformat")
-    private Boolean newGameSaveFormat = false;
-
-    @ExtraCommandLineArgument("usestore")
-    private Boolean useStore = false;
-
-    @ExtraCommandLineArgument("BackupTransferPlayerDatas")
-    private Boolean backupTransferPlayerData = false;
-
     @ExtraCommandLineArgument("EnableIdlePlayerKick")
     private Boolean enableIdlePlayerKick = false;
 
