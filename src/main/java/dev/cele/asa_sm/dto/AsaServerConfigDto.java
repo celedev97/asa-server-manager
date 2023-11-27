@@ -2,6 +2,7 @@ package dev.cele.asa_sm.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.cele.asa_sm.Const;
+import dev.cele.asa_sm.dto.ini.game.GameINI;
 import dev.cele.asa_sm.dto.ini.game_user_settings.GameUserSettingsINI;
 import dev.cele.asa_sm.enums.MapsEnum;
 import lombok.Getter;
@@ -84,7 +85,7 @@ public class AsaServerConfigDto {
 
 
     GameUserSettingsINI gameUserSettingsINI = new GameUserSettingsINI();
-
+    GameINI gameINI = new GameINI();
 
 
     @ExtraCommandLineArgument(value = "NoBattlEye", invertBoolean = true)
