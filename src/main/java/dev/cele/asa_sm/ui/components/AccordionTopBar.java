@@ -2,11 +2,13 @@ package dev.cele.asa_sm.ui.components;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+@Slf4j
 public class AccordionTopBar extends JPanel {
     private final JLabel label = new JLabel();
 
@@ -27,6 +29,8 @@ public class AccordionTopBar extends JPanel {
             }else{
                 parent.setPreferredSize(null);
             }
+        }else{
+            log.error("Accordion("+label.getText() + ") has no parent or parent layout is not BorderLayout");
         }
     }
 

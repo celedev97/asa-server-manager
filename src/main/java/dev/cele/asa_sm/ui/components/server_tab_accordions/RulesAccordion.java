@@ -66,9 +66,6 @@ public class RulesAccordion {
     Environment environment = SpringApplicationContext.autoWire(Environment.class);
 
     private void afterInit() {
-        var isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
-        contentPane.setVisible(isDev);
-
         enableHardcoreModeCheckBox.setSelected(configDto.getGameUserSettingsINI().getServerSettings().getServerHardcore());
         enableHardcoreModeCheckBox.addActionListener(e ->
                 configDto.getGameUserSettingsINI().getServerSettings().setServerHardcore(enableHardcoreModeCheckBox.isSelected())

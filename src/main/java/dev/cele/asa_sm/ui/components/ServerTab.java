@@ -15,6 +15,7 @@ import dev.cele.asa_sm.ui.listeners.SimpleDocumentListener;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -37,9 +39,14 @@ public class ServerTab extends JPanel {
     private final ObjectMapper objectMapper = SpringApplicationContext.autoWire(ObjectMapper.class);
     private final IniSerializerService iniSerializerService = SpringApplicationContext.autoWire(IniSerializerService.class);
     private Logger log = LoggerFactory.getLogger(ServerTab.class);
+
+    private final Environment environment = SpringApplicationContext.autoWire(Environment.class);
+    private final boolean isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
+
     //endregion
 
     //region UI components
+    private final JPanel scrollPaneContent;
     private final TopPanel topPanel;
 
     //endregion
@@ -64,7 +71,7 @@ public class ServerTab extends JPanel {
         globalVerticalGBC.insets = new Insets(5, 5, 5, 0);
 
         //create a JScrollPane and a content panel
-        JPanel scrollPaneContent = new JPanel();
+        scrollPaneContent = new JPanel();
         scrollPaneContent.setLayout(new GridBagLayout());
         JScrollPane scrollPane = new JScrollPane(scrollPaneContent);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
@@ -82,14 +89,21 @@ public class ServerTab extends JPanel {
         scrollPaneContent.add(administrationAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
 
         //... other accordion groups ...
-        var rulesAccordion = new RulesAccordion(configDto);
-        scrollPaneContent.add(rulesAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
+        if(isDev){
+            var rulesAccordion = new RulesAccordion(configDto);
+            scrollPaneContent.add(rulesAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
+        }
 
         var chatAndNotificationsAccordion = new ChatAndNotificationsAccordion(configDto);
         scrollPaneContent.add(chatAndNotificationsAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
 
         var hudAndVisualsAccordion = new HUDAndVisuals(configDto);
         scrollPaneContent.add(hudAndVisualsAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
+
+        if(isDev){
+            var playerSettingsAccordion = new PlayerSettingsAccordion(configDto);
+            scrollPaneContent.add(playerSettingsAccordion.$$$getRootComponent$$$(), globalVerticalGBC);
+        }
 
         //create an empty filler panel that will fill the remaining space if there's any
         JPanel fillerPanel = new JPanel();
@@ -141,7 +155,39 @@ public class ServerTab extends JPanel {
 
         SwingUtilities.invokeLater(() -> {
             setupListenersForUnsaved(this);
+            setupAccordionsExpansion();
         });
+    }
+
+    void setupAccordionsExpansion(){
+        var accordions = new ArrayList<AccordionTopBar>();
+
+        //loop over all the children of the container
+        for (Component component : scrollPaneContent.getComponents()) {
+            //if the component is a container, has a borderlayout, and his top component is a AccordionTopBar
+            if(component instanceof Container &&
+                    ((Container) component).getLayout() instanceof BorderLayout
+            ){
+                var topComponent = ((BorderLayout) ((Container) component).getLayout()).getLayoutComponent(BorderLayout.NORTH);
+                if(topComponent instanceof AccordionTopBar){
+                    accordions.add((AccordionTopBar) topComponent);
+                }
+            }
+        }
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                SwingUtilities.invokeLater(() -> {
+                    for (var accordion : accordions) {
+                        //TODO: use the text from the accordion to check if it's expanded or not and save it to a json or something?
+                        accordion.setExpanded(false);
+                    }
+                });
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     void setupListenersForUnsaved(Container container){
