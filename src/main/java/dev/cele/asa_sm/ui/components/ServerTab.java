@@ -177,7 +177,7 @@ public class ServerTab extends JPanel {
 
         new Thread(() -> {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1500);
                 SwingUtilities.invokeLater(() -> {
                     for (var accordion : accordions) {
                         //TODO: use the text from the accordion to check if it's expanded or not and save it to a json or something?
