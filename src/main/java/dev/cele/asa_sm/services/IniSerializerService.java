@@ -132,6 +132,11 @@ public class IniSerializerService {
 
     @SneakyThrows
     public void writeIniFile(Object iniDtoObject, File iniFile) {
+        //check if all the folders of the files exist
+        if(!iniFile.getParentFile().exists()){
+            iniFile.getParentFile().mkdirs();
+        }
+
         Ini ini = new Ini();
 
         //read recognized sections from dto
