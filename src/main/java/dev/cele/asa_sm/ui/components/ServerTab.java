@@ -221,7 +221,9 @@ public class ServerTab extends JPanel {
                 .resolve("GameUserSettings.ini")
                 .toFile();
 
-        iniSerializerService.readIniFile(configDto.getGameUserSettingsINI(), gameUserSettingsIniFile);
+        if(gameUserSettingsIniFile.exists()){
+            iniSerializerService.readIniFile(configDto.getGameUserSettingsINI(), gameUserSettingsIniFile);
+        }
 
         //TODO: read Game.ini
     }
