@@ -299,6 +299,39 @@ public class ServerTab extends JPanel {
 
     public void install(){
         var wasInstalled = detectInstalled();
+
+        //if it's a new installation ask the user if they want to choose where to install the server or if they want to use the default location
+        var defaultInstallDialogResult = JOptionPane.showConfirmDialog(this, "Do you want to choose where to install the server (if you press no the default install location will be used)?", "Choose installation location", JOptionPane.YES_NO_OPTION);
+        if(defaultInstallDialogResult == JOptionPane.YES_OPTION){
+            //ask the user where to install the server
+            var fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setDialogTitle("Choose where to install the server");
+            fileChooser.setApproveButtonText("Install");
+            fileChooser.setApproveButtonToolTipText("Install the server in the selected location");
+            fileChooser.setMultiSelectionEnabled(false);
+            fileChooser.setFileHidingEnabled(false);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory();
+                }
+
+                @Override
+                public String getDescription() {
+                    return "Directories";
+                }
+            });
+
+            var result = fileChooser.showOpenDialog(this);
+            if(result == JFileChooser.APPROVE_OPTION){
+                configDto.setCustomInstallPath(fileChooser.getSelectedFile().getAbsolutePath());
+            }else{
+                return;
+            }
+        }
+
         ProcessDialog processDialog = new ProcessDialog(
                 (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this),
                 wasInstalled ? "Verifying/Updating server..." : "Installing server...",
